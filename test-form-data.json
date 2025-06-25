@@ -1,0 +1,52 @@
+{
+  "patient": {
+    "firstName": "Test",
+    "lastName": "Patient",
+    "dateOfBirth": "2010-01-01",
+    "gender": "male",
+    "address": "123 Test St",
+    "city": "Test City",
+    "state": "CA",
+    "zipCode": "12345",
+    "phoneNumber": "555-123-4567"
+  },
+  "parentGuardian1": {
+    "firstName": "Test",
+    "lastName": "Parent",
+    "relationship": "parent",
+    "phoneNumber": "555-123-4567",
+    "email": "test@example.com",
+    "address": "123 Test St",
+    "city": "Test City",
+    "state": "CA",
+    "zipCode": "12345"
+  },
+  "primaryInsurance": {
+    "insuranceCompany": "Test Insurance",
+    "policyNumber": "TEST123",
+    "groupNumber": "GROUP123",
+    "subscriberName": "Test Parent",
+    "subscriberDateOfBirth": "1980-01-01",
+    "relationshipToPatient": "parent"
+  },
+  "guarantor": {
+    "firstName": "Test",
+    "lastName": "Parent",
+    "relationship": "parent",
+    "phoneNumber": "555-123-4567",
+    "email": "test@example.com",
+    "address": "123 Test St",
+    "city": "Test City",
+    "state": "CA",
+    "zipCode": "12345"
+  },
+  "emergencyContact1": {
+    "firstName": "Emergency",
+    "lastName": "Contact",
+    "relationship": "friend",
+    "phoneNumber": "555-987-6543"
+  },
+  "consentToTreatment": true,
+  "hipaaAcknowledgment": true,
+  "financialPolicyAgreement": true
+}

@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Send test email
     console.log('Attempting to send test email...');
     const result = await resend.emails.send({
-      from: fromEmail || 'noreply@danvillepediatrics.net',
+      from: 'onboarding@resend.dev', // Force use of working email
       to: practiceEmail || 'Admin@DanvillePediatrics.com',
       subject: 'Test Email - Danville Pediatrics Registration System',
       html: `
