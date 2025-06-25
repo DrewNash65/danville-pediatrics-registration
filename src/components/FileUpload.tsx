@@ -13,6 +13,11 @@ interface FileUploadProps {
   enableCamera?: boolean;
 }
 
+// Check if device has camera capabilities
+const hasCamera = () => {
+  return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+};
+
 export function FileUpload({
   label,
   accept = "image/*",
@@ -86,8 +91,20 @@ export function FileUpload({
 
   const handleCameraClick = () => {
     setShowCameraOptions(false);
-    // Always try to use camera input first
-    cameraInputRef.current?.click();
+
+    // Debug logging
+    console.log('Camera button clicked');
+    console.log('Camera input ref:', cameraInputRef.current);
+    console.log('Has camera capability:', hasCamera());
+
+    // Try to trigger camera input
+    if (cameraInputRef.current) {
+      console.log('Triggering camera input click');
+      cameraInputRef.current.click();
+    } else {
+      console.log('Camera input ref not available, falling back to file input');
+      fileInputRef.current?.click();
+    }
   };
 
   const handleRemove = () => {
@@ -139,7 +156,7 @@ export function FileUpload({
           className="hidden"
         />
 
-        {/* Camera input for direct camera access */}
+        {/* Camera input for direct camera access - rear camera preferred */}
         <input
           ref={cameraInputRef}
           type="file"
@@ -147,6 +164,19 @@ export function FileUpload({
           capture="environment"
           onChange={handleInputChange}
           className="hidden"
+          title="Take photo with camera"
+          data-camera="true"
+        />
+
+        {/* Alternative camera input for better compatibility */}
+        <input
+          type="file"
+          accept="image/*"
+          capture="camera"
+          onChange={handleInputChange}
+          className="hidden"
+          style={{ display: 'none' }}
+          id="camera-fallback"
         />
 
         {selectedFile ? (
@@ -177,7 +207,14 @@ export function FileUpload({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <div className="text-sm text-gray-700 font-medium">Choose upload method:</div>
+            <div className="text-sm text-gray-700 font-medium">
+              Choose upload method:
+              {hasCamera() && (
+                <span className="ml-2 text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                  📷 Camera Available
+                </span>
+              )}
+            </div>
             <div className="flex flex-col space-y-2">
               <button
                 type="button"

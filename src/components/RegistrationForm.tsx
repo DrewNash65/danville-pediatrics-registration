@@ -173,6 +173,7 @@ export function RegistrationForm() {
                 width={200}
                 height={100}
                 className="mx-auto mb-4"
+                style={{ width: 'auto', height: 'auto' }}
                 priority
               />
               <h1 className="text-2xl font-bold text-gray-800">
@@ -224,6 +225,7 @@ export function RegistrationForm() {
               width={200}
               height={100}
               className="mx-auto mb-4"
+              style={{ width: 'auto', height: 'auto' }}
               priority
             />
             <h1 className="text-2xl font-bold text-gray-800">
