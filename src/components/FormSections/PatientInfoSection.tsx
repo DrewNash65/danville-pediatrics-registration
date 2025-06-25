@@ -85,6 +85,14 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
 
   return (
     <div className="space-y-6">
+      <div className="info-box">
+        <p className="info-box-text">
+          <strong>Patient Information:</strong> Please provide accurate information for the patient receiving care.
+        </p>
+      </div>
+
+      <h3 className="section-header">Basic Information</h3>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
           label="First Name"
@@ -94,7 +102,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           <input
             type="text"
             {...register('patient.firstName')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
             placeholder="Enter first name"
           />
         </FormField>
@@ -107,7 +115,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           <input
             type="text"
             {...register('patient.lastName')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
             placeholder="Enter last name"
           />
         </FormField>
@@ -122,7 +130,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           <input
             type="date"
             {...register('patient.dateOfBirth')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
           />
         </FormField>
 
@@ -137,8 +145,8 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
 
 
 
-      <div className="border-t pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Home Address</h3>
+      <h3 className="section-header">Home Address</h3>
+      <div className="space-y-4">
         
         <FormField
           label="Street Address"
@@ -148,7 +156,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           <input
             type="text"
             {...register('patient.homeAddress.street')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
             placeholder="Enter street address"
           />
         </FormField>
@@ -191,8 +199,12 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
         </div>
       </div>
 
-      <div className="border-t pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
+      <h3 className="section-header">Contact Information</h3>
+      <div className="info-box">
+        <p className="info-box-text">
+          <strong>Phone Numbers:</strong> Please provide at least one phone number where we can reach you.
+        </p>
+      </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -202,14 +214,13 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
             <input
               type="tel"
               {...register('patient.phoneNumbers.home')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
               onInput={(e) => {
                 const target = e.target as HTMLInputElement;
                 const formatted = formatPhoneNumber(target.value);
                 target.value = formatted;
-                // Trigger form validation
                 setValue('patient.phoneNumbers.home', formatted);
               }}
             />
@@ -222,14 +233,13 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
             <input
               type="tel"
               {...register('patient.phoneNumbers.cell')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="form-input"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
               onInput={(e) => {
                 const target = e.target as HTMLInputElement;
                 const formatted = formatPhoneNumber(target.value);
                 target.value = formatted;
-                // Trigger form validation
                 setValue('patient.phoneNumbers.cell', formatted);
               }}
             />
@@ -244,7 +254,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           <input
             type="email"
             {...register('patient.email')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="form-input"
             placeholder="patient@example.com"
           />
         </FormField>

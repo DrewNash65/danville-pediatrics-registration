@@ -120,18 +120,18 @@ export function FileUpload({
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">
+      <label className="block text-sm font-semibold text-blue-800">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
       <div
-        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-200 shadow-sm ${
           isDragOver
-            ? 'border-blue-400 bg-blue-50'
+            ? 'border-blue-400 bg-blue-50 shadow-md'
             : selectedFile
-            ? 'border-green-400 bg-green-50'
-            : 'border-gray-300 hover:border-gray-400'
+            ? 'border-green-400 bg-green-50 shadow-md'
+            : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'
         }`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
@@ -192,7 +192,7 @@ export function FileUpload({
                   e.stopPropagation();
                   handleCameraClick();
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
+                className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -206,7 +206,7 @@ export function FileUpload({
                   e.stopPropagation();
                   handleFileInputClick();
                 }}
-                className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2"
+                className="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 flex items-center justify-center space-x-2 shadow-md"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />

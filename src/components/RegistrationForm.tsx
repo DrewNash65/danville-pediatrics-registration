@@ -12,6 +12,7 @@ import { EmergencyContactSection } from './FormSections/EmergencyContactSection'
 import { ConsentSection } from './FormSections/ConsentSection';
 import { ProgressIndicator } from './ProgressIndicator';
 import { LoadingSpinner } from './LoadingSpinner';
+import Image from 'next/image';
 
 const FORM_STEPS = [
   { id: 'patient', title: 'Patient Information', component: PatientInfoSection },
@@ -161,18 +162,49 @@ export function RegistrationForm() {
 
   if (submitSuccess) {
     return (
-      <div className="max-w-2xl mx-auto p-6 bg-green-50 border border-green-200 rounded-lg">
-        <div className="text-center">
-          <div className="text-green-600 text-6xl mb-4">✓</div>
-          <h2 className="text-2xl font-bold text-green-800 mb-2">Registration Submitted Successfully!</h2>
-          <p className="text-green-700 mb-4">
-            Thank you for completing your registration with Danville Pediatrics. 
-            Your information has been securely submitted to our office.
-          </p>
-          <p className="text-sm text-green-600">
-            Our staff will review your information and contact you within 1-2 business days 
-            to schedule your appointment or if any additional information is needed.
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+        <div className="max-w-4xl mx-auto p-6">
+          {/* Header with Logo */}
+          <div className="text-center mb-8">
+            <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+              <Image
+                src="/Danville Pediatrics Logo.png"
+                alt="Danville Pediatrics Logo"
+                width={200}
+                height={100}
+                className="mx-auto mb-4"
+                priority
+              />
+              <h1 className="text-2xl font-bold text-gray-800">
+                1-to-1 Pediatrics
+              </h1>
+              <p className="text-gray-600 italic">
+                "Hometown Care for Your Child"
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-2xl mx-auto p-6 bg-green-50 border border-green-200 rounded-lg shadow-lg">
+            <div className="text-center">
+              <div className="text-green-600 text-6xl mb-4">✓</div>
+              <h2 className="text-2xl font-bold text-green-800 mb-2">Registration Submitted Successfully!</h2>
+              <p className="text-green-700 mb-4">
+                Thank you for completing your registration with Danville Pediatrics.
+                Your information has been securely submitted to our office.
+              </p>
+              <p className="text-sm text-green-600">
+                Our staff will review your information and contact you within 1-2 business days
+                to schedule your appointment or if any additional information is needed.
+              </p>
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-700">
+                  <strong>Contact Information:</strong><br />
+                  Phone: (925) 362-1861<br />
+                  Email: Admin@1to1Pediatrics.com
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -181,15 +213,30 @@ export function RegistrationForm() {
   const CurrentStepComponent = FORM_STEPS[currentStep].component;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Patient Registration - Danville Pediatrics
-        </h1>
-        <p className="text-gray-600">
-          "Hometown Care for Your Child" - Please complete all sections of this form
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Header with Logo */}
+        <div className="text-center mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <Image
+              src="/Danville Pediatrics Logo.png"
+              alt="Danville Pediatrics Logo"
+              width={200}
+              height={100}
+              className="mx-auto mb-4"
+              priority
+            />
+            <h1 className="text-2xl font-bold text-gray-800">
+              Patient Registration - 1-to-1 Pediatrics
+            </h1>
+            <p className="text-gray-600 italic">
+              "Hometown Care for Your Child"
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Please complete all sections of this secure, HIPAA-compliant form
+            </p>
+          </div>
+        </div>
 
       <ProgressIndicator 
         currentStep={currentStep} 
@@ -198,56 +245,76 @@ export function RegistrationForm() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            {FORM_STEPS[currentStep].title}
-          </h2>
-          
-          <CurrentStepComponent form={form} />
-        </div>
+          <div className="bg-white shadow-lg rounded-lg p-6 mb-6 border-t-4 border-blue-500">
+            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
+              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mr-3">
+                Step {currentStep + 1}
+              </span>
+              {FORM_STEPS[currentStep].title}
+            </h2>
 
-        {submitError && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-700">{submitError}</p>
+            <CurrentStepComponent form={form} />
           </div>
-        )}
 
-        <div className="flex justify-between">
-          <button
-            type="button"
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-400 transition-colors"
-          >
-            Previous
-          </button>
+          {submitError && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg shadow-sm">
+              <div className="flex items-center">
+                <svg className="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-red-700">{submitError}</p>
+              </div>
+            </div>
+          )}
 
-          {currentStep === FORM_STEPS.length - 1 ? (
-            <button
-              type="submit"
-              disabled={isSubmitting || !isValid}
-              className="px-8 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-colors flex items-center"
-            >
-              {isSubmitting ? (
-                <>
-                  <LoadingSpinner className="mr-2" />
-                  Submitting...
-                </>
-              ) : (
-                'Submit Registration'
-              )}
-            </button>
-          ) : (
+          <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
             <button
               type="button"
-              onClick={nextStep}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={prevStep}
+              disabled={currentStep === 0}
+              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition-colors font-medium flex items-center"
             >
-              Next
+              <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Previous
             </button>
-          )}
-        </div>
-      </form>
+
+            {currentStep === FORM_STEPS.length - 1 ? (
+              <button
+                type="submit"
+                disabled={isSubmitting || !isValid}
+                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center shadow-lg"
+              >
+                {isSubmitting ? (
+                  <>
+                    <LoadingSpinner className="mr-2" />
+                    Submitting Securely...
+                  </>
+                ) : (
+                  <>
+                    <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Submit Registration
+                  </>
+                )}
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={nextStep}
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center shadow-lg"
+              >
+                Next
+                <svg className="h-4 w-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
