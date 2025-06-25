@@ -25,7 +25,7 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   // Send email with Resend
   try {
     const { data, error } = await resend.emails.send({
-      from: 'noreply@danvillepediatrics.net', // Use your verified domain
+      from: process.env.RESEND_FROM_EMAIL || 'noreply@danvillepediatrics.net',
       to: [to],
       subject: subject,
       html: htmlContent,
