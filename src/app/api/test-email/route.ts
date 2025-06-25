@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     console.log('Attempting to send test email...');
     const result = await resend.emails.send({
       from: 'onboarding@resend.dev', // Force use of working email
-      to: practiceEmail || 'Admin@DanvillePediatrics.com',
+      to: 'drew@1to1pediatrics.com', // Test email - send to your verified address
       subject: 'Test Email - Danville Pediatrics Registration System',
       html: `
         <h2>🧪 Email Test Successful!</h2>
