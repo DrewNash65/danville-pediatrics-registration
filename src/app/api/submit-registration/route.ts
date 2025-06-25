@@ -74,13 +74,13 @@ export async function POST(request: NextRequest) {
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
         await sendSecureEmail({
-          to: 'drew@1to1pediatrics.com', // Temporary - use your verified email
+          to: 'Admin@1to1Pediatrics.com', // Your desired practice email
           subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
           submissionId,
           formData: completeFormData,
           pdfAttachment: pdfBuffer,
         });
-        console.log('Email sent successfully to: drew@1to1pediatrics.com');
+        console.log('Email sent successfully to: Admin@1to1Pediatrics.com');
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         return NextResponse.json(
