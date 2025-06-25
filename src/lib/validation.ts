@@ -2,12 +2,18 @@ import { z } from 'zod';
 
 // Phone number validation
 const phoneSchema = z.string()
-  .regex(/^\(\d{3}\) \d{3}-\d{4}$/, 'Phone number must be in format (XXX) XXX-XXXX')
-  .optional();
+  .optional()
+  .refine((val) => {
+    if (!val || val === '') return true; // Allow empty
+    return /^\(\d{3}\) \d{3}-\d{4}$/.test(val);
+  }, 'Phone number must be in format (XXX) XXX-XXXX');
 
 // Required phone number
 const requiredPhoneSchema = z.string()
-  .regex(/^\(\d{3}\) \d{3}-\d{4}$/, 'Phone number must be in format (XXX) XXX-XXXX');
+  .min(1, 'Phone number is required')
+  .refine((val) => {
+    return /^\(\d{3}\) \d{3}-\d{4}$/.test(val);
+  }, 'Phone number must be in format (XXX) XXX-XXXX');
 
 // Email validation
 const emailSchema = z.string().email('Invalid email address').optional();
@@ -18,8 +24,11 @@ const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY
 
 // SSN validation (optional)
 const ssnSchema = z.string()
-  .regex(/^\d{3}-\d{2}-\d{4}$/, 'SSN must be in format XXX-XX-XXXX')
-  .optional();
+  .optional()
+  .refine((val) => {
+    if (!val || val === '') return true; // Allow empty
+    return /^\d{3}-\d{2}-\d{4}$/.test(val);
+  }, 'SSN must be in format XXX-XX-XXXX');
 
 // Address schema
 const addressSchema = z.object({
@@ -39,8 +48,13 @@ export const patientInfoSchema = z.object({
   phoneNumbers: z.object({
     home: phoneSchema,
     cell: phoneSchema,
-  }).refine(data => data.home || data.cell, {
+  }).refine(data => {
+    const hasHome = data.home && data.home.trim() !== '';
+    const hasCell = data.cell && data.cell.trim() !== '';
+    return hasHome || hasCell;
+  }, {
     message: 'At least one phone number is required',
+    path: ['root']
   }),
   email: emailSchema,
 });
@@ -53,8 +67,13 @@ export const parentGuardianSchema = z.object({
   phoneNumbers: z.object({
     cell: phoneSchema,
     work: phoneSchema,
-  }).refine(data => data.cell || data.work, {
+  }).refine(data => {
+    const hasCell = data.cell && data.cell.trim() !== '';
+    const hasWork = data.work && data.work.trim() !== '';
+    return hasCell || hasWork;
+  }, {
     message: 'At least one phone number is required',
+    path: ['root']
   }),
   email: requiredEmailSchema,
   isPrimaryContact: z.boolean(),
@@ -96,8 +115,14 @@ export const emergencyContactSchema = z.object({
     home: phoneSchema,
     cell: phoneSchema,
     work: phoneSchema,
-  }).refine(data => data.home || data.cell || data.work, {
+  }).refine(data => {
+    const hasHome = data.home && data.home.trim() !== '';
+    const hasCell = data.cell && data.cell.trim() !== '';
+    const hasWork = data.work && data.work.trim() !== '';
+    return hasHome || hasCell || hasWork;
+  }, {
     message: 'At least one phone number is required',
+    path: ['root']
   }),
 });
 

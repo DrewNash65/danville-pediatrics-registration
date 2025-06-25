@@ -12,12 +12,12 @@ interface EmailOptions {
 export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   const { to, subject, submissionId, formData, pdfAttachment } = options;
 
-  // Initialize Resend
-  const resend = new Resend(process.env.RESEND_API_KEY);
-
   if (!process.env.RESEND_API_KEY) {
     throw new Error('RESEND_API_KEY environment variable is required');
   }
+
+  // Initialize Resend
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
   // Create email content
   const htmlContent = generateEmailHTML(formData, submissionId);

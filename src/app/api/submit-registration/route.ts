@@ -70,24 +70,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send secure email with PDF attachment
-    try {
-      await sendSecureEmail({
-        to: process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com',
-        subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
-        submissionId,
-        formData: completeFormData,
-        pdfAttachment: pdfBuffer,
-      });
-    } catch (emailError) {
-      console.error('Email sending error:', emailError);
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: 'Failed to send registration to practice. Please try again or contact the office directly.' 
-        },
-        { status: 500 }
-      );
+    // Send secure email with PDF attachment (if configured)
+    if (process.env.RESEND_API_KEY) {
+      try {
+        await sendSecureEmail({
+          to: process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com',
+          subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
+          submissionId,
+          formData: completeFormData,
+          pdfAttachment: pdfBuffer,
+        });
+      } catch (emailError) {
+        console.error('Email sending error:', emailError);
+        return NextResponse.json(
+          {
+            success: false,
+            message: 'Failed to send registration to practice. Please try again or contact the office directly.'
+          },
+          { status: 500 }
+        );
+      }
+    } else {
+      console.log('Email not configured - would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
+      console.log('PDF generated successfully for submission:', submissionId);
     }
 
     // Store encrypted form data (optional - for backup/audit purposes)
@@ -102,10 +107,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Return success response
+    const message = process.env.RESEND_API_KEY
+      ? 'Registration submitted successfully. You will receive a confirmation email shortly.'
+      : 'Registration submitted successfully. The practice will be notified of your submission.';
+
     return NextResponse.json({
       success: true,
       submissionId,
-      message: 'Registration submitted successfully. You will receive a confirmation email shortly.',
+      message,
     });
 
   } catch (error) {

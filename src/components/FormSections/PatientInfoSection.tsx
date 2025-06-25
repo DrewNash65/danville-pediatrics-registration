@@ -71,10 +71,11 @@ const GENDER_OPTIONS = [
 ];
 
 export function PatientInfoSection({ form }: PatientInfoSectionProps) {
-  const { register, formState: { errors } } = form;
+  const { register, formState: { errors }, setValue } = form;
 
   const formatPhoneNumber = (value: string) => {
     const numbers = value.replace(/\D/g, '');
+    if (numbers.length === 0) return '';
     if (numbers.length <= 3) return numbers;
     if (numbers.length <= 6) return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
     return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
@@ -204,8 +205,12 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
-              onChange={(e) => {
-                e.target.value = formatPhoneNumber(e.target.value);
+              onInput={(e) => {
+                const target = e.target as HTMLInputElement;
+                const formatted = formatPhoneNumber(target.value);
+                target.value = formatted;
+                // Trigger form validation
+                setValue('patient.phoneNumbers.home', formatted);
               }}
             />
           </FormField>
@@ -220,8 +225,12 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
-              onChange={(e) => {
-                e.target.value = formatPhoneNumber(e.target.value);
+              onInput={(e) => {
+                const target = e.target as HTMLInputElement;
+                const formatted = formatPhoneNumber(target.value);
+                target.value = formatted;
+                // Trigger form validation
+                setValue('patient.phoneNumbers.cell', formatted);
               }}
             />
           </FormField>
