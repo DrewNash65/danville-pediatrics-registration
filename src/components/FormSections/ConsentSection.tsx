@@ -30,7 +30,7 @@ export function ConsentSection({ form }: ConsentSectionProps) {
             <strong>CONSENT TO TREATMENT</strong>
           </p>
           <p className="mb-3">
-            I hereby give my consent for the healthcare providers at Danville Pediatrics (1-to-1 Pediatrics) 
+            I hereby give my consent for the healthcare providers at Danville Pediatrics
             to examine, diagnose, and treat my child. I understand that:
           </p>
           <ul className="list-disc ml-6 space-y-2 mb-3">

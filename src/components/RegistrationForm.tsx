@@ -176,7 +176,7 @@ export function RegistrationForm() {
                 priority
               />
               <h1 className="text-2xl font-bold text-gray-800">
-                1-to-1 Pediatrics
+                Danville Pediatrics
               </h1>
               <p className="text-gray-600 italic">
                 "Hometown Care for Your Child"
@@ -200,7 +200,7 @@ export function RegistrationForm() {
                 <p className="text-sm text-blue-700">
                   <strong>Contact Information:</strong><br />
                   Phone: (925) 362-1861<br />
-                  Email: Admin@1to1Pediatrics.com
+                  Email: Admin@DanvillePediatrics.com
                 </p>
               </div>
             </div>
@@ -227,7 +227,7 @@ export function RegistrationForm() {
               priority
             />
             <h1 className="text-2xl font-bold text-gray-800">
-              Patient Registration - 1-to-1 Pediatrics
+              Patient Registration - Danville Pediatrics
             </h1>
             <p className="text-gray-600 italic">
               "Hometown Care for Your Child"

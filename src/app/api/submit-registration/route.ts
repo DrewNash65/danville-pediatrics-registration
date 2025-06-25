@@ -74,13 +74,13 @@ export async function POST(request: NextRequest) {
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
         await sendSecureEmail({
-          to: process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com',
+          to: process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com',
           subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
           submissionId,
           formData: completeFormData,
           pdfAttachment: pdfBuffer,
         });
-        console.log('Email sent successfully to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
+        console.log('Email sent successfully to:', process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com');
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         return NextResponse.json(
@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.log('⚠️  EMAIL NOT CONFIGURED - Resend API key needed');
-      console.log('📧 Would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
+      console.log('📧 Would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com');
       console.log('📄 PDF generated successfully for submission:', submissionId);
       console.log('🔧 To enable email: Set RESEND_API_KEY in .env.local');
     }
