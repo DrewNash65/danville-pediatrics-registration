@@ -35,7 +35,6 @@ export const patientInfoSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   dateOfBirth: dateSchema,
   gender: z.enum(['male', 'female', 'other', 'prefer-not-to-say']),
-  socialSecurityNumber: ssnSchema,
   homeAddress: addressSchema,
   phoneNumbers: z.object({
     home: phoneSchema,
@@ -52,10 +51,9 @@ export const parentGuardianSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   relationship: z.string().min(1, 'Relationship is required'),
   phoneNumbers: z.object({
-    home: phoneSchema,
     cell: phoneSchema,
     work: phoneSchema,
-  }).refine(data => data.home || data.cell || data.work, {
+  }).refine(data => data.cell || data.work, {
     message: 'At least one phone number is required',
   }),
   email: requiredEmailSchema,
@@ -78,6 +76,7 @@ export const guarantorSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   relationshipToPatient: z.string().min(1, 'Relationship to patient is required'),
+  socialSecurityNumber: ssnSchema,
   address: addressSchema,
   phoneNumber: requiredPhoneSchema,
   email: requiredEmailSchema,

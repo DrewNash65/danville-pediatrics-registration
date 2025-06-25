@@ -3,7 +3,6 @@ export interface PatientInfo {
   lastName: string;
   dateOfBirth: string;
   gender: 'male' | 'female' | 'other' | 'prefer-not-to-say';
-  socialSecurityNumber?: string;
   homeAddress: {
     street: string;
     city: string;
@@ -22,7 +21,6 @@ export interface ParentGuardianInfo {
   lastName: string;
   relationship: string;
   phoneNumbers: {
-    home?: string;
     cell?: string;
     work?: string;
   };
@@ -46,6 +44,7 @@ export interface GuarantorInfo {
   firstName: string;
   lastName: string;
   relationshipToPatient: string;
+  socialSecurityNumber?: string;
   address: {
     street: string;
     city: string;

@@ -88,6 +88,13 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
     return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
   };
 
+  const formatSSN = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 5) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 5)}-${numbers.slice(5, 9)}`;
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -133,6 +140,23 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
         error={errors.guarantor?.relationshipToPatient?.message}
         {...register('guarantor.relationshipToPatient')}
       />
+
+      <FormField
+        label="Social Security Number"
+        error={errors.guarantor?.socialSecurityNumber?.message}
+        helpText="Optional - Used for billing and insurance purposes"
+      >
+        <input
+          type="text"
+          {...register('guarantor.socialSecurityNumber')}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="XXX-XX-XXXX"
+          maxLength={11}
+          onChange={(e) => {
+            e.target.value = formatSSN(e.target.value);
+          }}
+        />
+      </FormField>
 
       <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Guarantor Address</h3>

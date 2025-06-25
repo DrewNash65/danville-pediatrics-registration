@@ -49,9 +49,6 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText(`Name: ${formData.patient.firstName} ${formData.patient.lastName}`);
   addText(`Date of Birth: ${formData.patient.dateOfBirth}`);
   addText(`Gender: ${formData.patient.gender}`);
-  if (formData.patient.socialSecurityNumber) {
-    addText(`SSN: ${formData.patient.socialSecurityNumber}`);
-  }
   
   addText('Address:');
   addText(`  ${formData.patient.homeAddress.street}`);
@@ -73,10 +70,7 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText(`Relationship: ${formData.parentGuardian1.relationship}`);
   addText(`Email: ${formData.parentGuardian1.email}`);
   addText(`Primary Contact: ${formData.parentGuardian1.isPrimaryContact ? 'Yes' : 'No'}`);
-  
-  if (formData.parentGuardian1.phoneNumbers.home) {
-    addText(`Home Phone: ${formData.parentGuardian1.phoneNumbers.home}`);
-  }
+
   if (formData.parentGuardian1.phoneNumbers.cell) {
     addText(`Cell Phone: ${formData.parentGuardian1.phoneNumbers.cell}`);
   }
@@ -91,10 +85,7 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addText(`Relationship: ${formData.parentGuardian2.relationship}`);
     addText(`Email: ${formData.parentGuardian2.email}`);
     addText(`Primary Contact: ${formData.parentGuardian2.isPrimaryContact ? 'Yes' : 'No'}`);
-    
-    if (formData.parentGuardian2.phoneNumbers.home) {
-      addText(`Home Phone: ${formData.parentGuardian2.phoneNumbers.home}`);
-    }
+
     if (formData.parentGuardian2.phoneNumbers.cell) {
       addText(`Cell Phone: ${formData.parentGuardian2.phoneNumbers.cell}`);
     }
@@ -131,6 +122,9 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addSection('GUARANTOR INFORMATION');
   addText(`Name: ${formData.guarantor.firstName} ${formData.guarantor.lastName}`);
   addText(`Relationship to Patient: ${formData.guarantor.relationshipToPatient}`);
+  if (formData.guarantor.socialSecurityNumber) {
+    addText(`SSN: ${formData.guarantor.socialSecurityNumber}`);
+  }
   addText(`Phone: ${formData.guarantor.phoneNumber}`);
   addText(`Email: ${formData.guarantor.email}`);
   

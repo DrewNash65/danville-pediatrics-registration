@@ -91,23 +91,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
           </FormField>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormField
-            label="Home Phone"
-            error={errors.parentGuardian1?.phoneNumbers?.home?.message}
-          >
-            <input
-              type="tel"
-              {...register('parentGuardian1.phoneNumbers.home')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="(XXX) XXX-XXXX"
-              maxLength={14}
-              onChange={(e) => {
-                e.target.value = formatPhoneNumber(e.target.value);
-              }}
-            />
-          </FormField>
-
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             label="Cell Phone"
             error={errors.parentGuardian1?.phoneNumbers?.cell?.message}
@@ -140,6 +124,10 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             />
           </FormField>
         </div>
+
+        <p className="text-sm text-gray-600 mt-2">
+          <span className="text-red-600">*</span> At least one phone number is required
+        </p>
 
         {(errors.parentGuardian1?.phoneNumbers as any)?.root && (
           <p className="text-red-600 text-sm mt-2">
@@ -225,23 +213,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
               </FormField>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <FormField
-                label="Home Phone"
-                error={errors.parentGuardian2?.phoneNumbers?.home?.message}
-              >
-                <input
-                  type="tel"
-                  {...register('parentGuardian2.phoneNumbers.home')}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="(XXX) XXX-XXXX"
-                  maxLength={14}
-                  onChange={(e) => {
-                    e.target.value = formatPhoneNumber(e.target.value);
-                  }}
-                />
-              </FormField>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Cell Phone"
                 error={errors.parentGuardian2?.phoneNumbers?.cell?.message}
@@ -274,6 +246,10 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
                 />
               </FormField>
             </div>
+
+            <p className="text-sm text-gray-600 mt-2">
+              <span className="text-red-600">*</span> At least one phone number is required
+            </p>
 
             <div>
               <label className="flex items-center">

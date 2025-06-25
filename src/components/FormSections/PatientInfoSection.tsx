@@ -80,12 +80,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
     return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
   };
 
-  const formatSSN = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 5) return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
-    return `${numbers.slice(0, 3)}-${numbers.slice(3, 5)}-${numbers.slice(5, 9)}`;
-  };
+
 
   return (
     <div className="space-y-6">
@@ -139,22 +134,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
         />
       </div>
 
-      <FormField
-        label="Social Security Number"
-        error={errors.patient?.socialSecurityNumber?.message}
-        helpText="Optional - Used for insurance verification"
-      >
-        <input
-          type="text"
-          {...register('patient.socialSecurityNumber')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="XXX-XX-XXXX"
-          maxLength={11}
-          onChange={(e) => {
-            e.target.value = formatSSN(e.target.value);
-          }}
-        />
-      </FormField>
+
 
       <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">Home Address</h3>

@@ -49,7 +49,10 @@ export function RegistrationForm() {
         firstName: '',
         lastName: '',
         relationship: '',
-        phoneNumbers: {},
+        phoneNumbers: {
+          cell: '',
+          work: '',
+        },
         email: '',
         isPrimaryContact: true,
       },
@@ -65,6 +68,7 @@ export function RegistrationForm() {
         firstName: '',
         lastName: '',
         relationshipToPatient: '',
+        socialSecurityNumber: '',
         address: {
           street: '',
           city: '',

@@ -86,7 +86,6 @@ function generateEmailHTML(formData: RegistrationFormData, submissionId: string)
         <p><span class="label">Name:</span> ${formData.patient.firstName} ${formData.patient.lastName}</p>
         <p><span class="label">Date of Birth:</span> ${formData.patient.dateOfBirth}</p>
         <p><span class="label">Gender:</span> ${formData.patient.gender}</p>
-        ${formData.patient.socialSecurityNumber ? `<p><span class="label">SSN:</span> ${formData.patient.socialSecurityNumber}</p>` : ''}
       </div>
 
       <div class="section">
@@ -128,7 +127,7 @@ function generateEmailHTML(formData: RegistrationFormData, submissionId: string)
         </ul>
         <p><strong>Contact Information:</strong><br>
         Primary Contact: ${formData.parentGuardian1.email}<br>
-        Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.home || 'Not provided'}</p>
+        Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.work || 'Not provided'}</p>
       </div>
     </body>
     </html>
@@ -146,7 +145,6 @@ PATIENT INFORMATION
 Name: ${formData.patient.firstName} ${formData.patient.lastName}
 Date of Birth: ${formData.patient.dateOfBirth}
 Gender: ${formData.patient.gender}
-${formData.patient.socialSecurityNumber ? `SSN: ${formData.patient.socialSecurityNumber}` : ''}
 
 PRIMARY PARENT/GUARDIAN
 Name: ${formData.parentGuardian1.firstName} ${formData.parentGuardian1.lastName}
@@ -177,7 +175,7 @@ NEXT STEPS:
 
 Contact Information:
 Primary Contact: ${formData.parentGuardian1.email}
-Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.home || 'Not provided'}
+Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.work || 'Not provided'}
 
 This registration was submitted securely through the Danville Pediatrics HIPAA-compliant online form.
   `;
