@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send secure email with PDF attachment (if configured)
-    if (process.env.RESEND_API_KEY) {
+    if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
         await sendSecureEmail({
           to: process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com',
@@ -80,6 +80,7 @@ export async function POST(request: NextRequest) {
           formData: completeFormData,
           pdfAttachment: pdfBuffer,
         });
+        console.log('Email sent successfully to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         return NextResponse.json(
@@ -91,8 +92,10 @@ export async function POST(request: NextRequest) {
         );
       }
     } else {
-      console.log('Email not configured - would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
-      console.log('PDF generated successfully for submission:', submissionId);
+      console.log('⚠️  EMAIL NOT CONFIGURED - Resend API key needed');
+      console.log('📧 Would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com');
+      console.log('📄 PDF generated successfully for submission:', submissionId);
+      console.log('🔧 To enable email: Set RESEND_API_KEY in .env.local');
     }
 
     // Store encrypted form data (optional - for backup/audit purposes)
@@ -107,14 +110,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Return success response
-    const message = process.env.RESEND_API_KEY
-      ? 'Registration submitted successfully. You will receive a confirmation email shortly.'
-      : 'Registration submitted successfully. The practice will be notified of your submission.';
+    const hasValidApiKey = process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here';
+    const message = hasValidApiKey
+      ? 'Registration submitted successfully. The practice has been notified via email.'
+      : 'Registration submitted successfully. Email delivery requires Resend API configuration. Please contact the practice directly at (925) 362-1861.';
 
     return NextResponse.json({
       success: true,
       submissionId,
       message,
+      emailConfigured: hasValidApiKey,
     });
 
   } catch (error) {

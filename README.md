@@ -76,13 +76,19 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
 
 ### Email Setup with Resend
 
-1. **Create a Resend account** at [resend.com](https://resend.com)
+**🚨 IMPORTANT: Email delivery requires Resend API setup**
+
+1. **Create a Resend account** at [resend.com](https://resend.com) (free tier available)
 2. **Get your API key** from the Resend dashboard
-3. **Add your domain** (optional, for custom from addresses)
-4. **Set environment variables**:
-   - `RESEND_API_KEY`: Your Resend API key
-   - `RESEND_FROM_EMAIL`: Your verified sender email
-   - `PRACTICE_EMAIL`: Admin@1to1Pediatrics.com
+3. **Update `.env.local`**:
+   ```env
+   RESEND_API_KEY=re_your_actual_api_key_here
+   RESEND_FROM_EMAIL=noreply@danvillepediatrics.net
+   PRACTICE_EMAIL=Admin@1to1Pediatrics.com
+   ```
+4. **Restart your development server** after updating environment variables
+
+**Without Resend setup**: Forms will submit successfully but emails won't be sent. You'll see a message to contact the practice directly.
 
 ### Security Configuration
 
