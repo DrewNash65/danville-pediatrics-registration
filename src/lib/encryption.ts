@@ -2,7 +2,6 @@ import CryptoJS from 'crypto-js';
 
 // Environment variables for encryption
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'default-key-change-in-production';
-const IV_LENGTH = 16; // For AES, this is always 16
 
 /**
  * Encrypts sensitive data using AES encryption

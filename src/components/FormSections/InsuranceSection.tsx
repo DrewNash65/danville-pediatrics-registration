@@ -125,14 +125,16 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
               label="Front of Insurance Card"
               accept="image/*"
               onFileSelect={(file) => handleFileUpload('primaryInsurance.cardFrontImage', file)}
-              helpText="Upload a clear photo of the front of your insurance card"
+              helpText="Take a photo with your camera or upload from gallery"
+              enableCamera={true}
             />
 
             <FileUpload
               label="Back of Insurance Card"
               accept="image/*"
               onFileSelect={(file) => handleFileUpload('primaryInsurance.cardBackImage', file)}
-              helpText="Upload a clear photo of the back of your insurance card"
+              helpText="Take a photo with your camera or upload from gallery"
+              enableCamera={true}
             />
           </div>
         </div>
@@ -237,14 +239,16 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                   label="Front of Secondary Insurance Card"
                   accept="image/*"
                   onFileSelect={(file) => handleFileUpload('secondaryInsurance.cardFrontImage', file)}
-                  helpText="Upload a clear photo of the front of your secondary insurance card"
+                  helpText="Take a photo with your camera or upload from gallery"
+                  enableCamera={true}
                 />
 
                 <FileUpload
                   label="Back of Secondary Insurance Card"
                   accept="image/*"
                   onFileSelect={(file) => handleFileUpload('secondaryInsurance.cardBackImage', file)}
-                  helpText="Upload a clear photo of the back of your secondary insurance card"
+                  helpText="Take a photo with your camera or upload from gallery"
+                  enableCamera={true}
                 />
               </div>
             </div>

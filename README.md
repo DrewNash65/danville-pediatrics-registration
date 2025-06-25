@@ -8,8 +8,9 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
 - 📋 **Multi-step Form** - User-friendly registration process with progress tracking
 - 👨‍👩‍👧‍👦 **Pediatric Focus** - Designed for minors with parent/guardian information
 - 🏥 **Insurance Management** - Primary and secondary insurance with card photo upload
-- 📧 **Secure Email** - Encrypted email delivery with PDF attachments
-- 📱 **Mobile Responsive** - Works on all devices
+- 📷 **Camera Integration** - Mobile camera capture for insurance cards
+- 📧 **Secure Email** - Resend integration for reliable email delivery
+- 📱 **Mobile Responsive** - Works on all devices with native camera support
 - 🔒 **Data Encryption** - All sensitive data is encrypted at rest and in transit
 - 📊 **Audit Logging** - Complete audit trail for compliance
 
@@ -20,7 +21,7 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
 - **Validation**: Zod schema validation
 - **Forms**: React Hook Form
 - **PDF Generation**: jsPDF
-- **Email**: Nodemailer with SMTP
+- **Email**: Resend API
 - **Encryption**: CryptoJS
 - **Deployment**: Vercel
 
@@ -30,7 +31,7 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
 
 - Node.js 18+
 - npm or yarn
-- SMTP email service (Gmail, SendGrid, etc.)
+- Resend account and API key
 
 ### Installation
 
@@ -53,11 +54,9 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
    Edit `.env.local` with your configuration:
    ```env
    ENCRYPTION_KEY=your-strong-encryption-key-here
-   SMTP_HOST=smtp.gmail.com
-   SMTP_PORT=587
-   SMTP_USER=your-email@gmail.com
-   SMTP_PASS=your-app-password
-   PRACTICE_EMAIL=office@danvillepediatrics.net
+   RESEND_API_KEY=your-resend-api-key-here
+   RESEND_FROM_EMAIL=noreply@danvillepediatrics.net
+   PRACTICE_EMAIL=Admin@1to1Pediatrics.com
    ```
 
 4. **Generate encryption key**
@@ -75,14 +74,15 @@ A secure, HIPAA-compliant online patient registration form for **Danville Pediat
 
 ## Configuration
 
-### Email Setup
+### Email Setup with Resend
 
-For Gmail:
-1. Enable 2-factor authentication
-2. Generate an App Password
-3. Use the App Password in `SMTP_PASS`
-
-For other providers, update the SMTP settings accordingly.
+1. **Create a Resend account** at [resend.com](https://resend.com)
+2. **Get your API key** from the Resend dashboard
+3. **Add your domain** (optional, for custom from addresses)
+4. **Set environment variables**:
+   - `RESEND_API_KEY`: Your Resend API key
+   - `RESEND_FROM_EMAIL`: Your verified sender email
+   - `PRACTICE_EMAIL`: Admin@1to1Pediatrics.com
 
 ### Security Configuration
 

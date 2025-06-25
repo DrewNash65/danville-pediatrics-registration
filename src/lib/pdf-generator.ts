@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import { RegistrationFormData } from '@/lib/validation';
 
-export async function generatePDF(formData: RegistrationFormData): Promise<Buffer> {
+export async function generatePDF(formData: RegistrationFormData & { submissionId?: string; submissionTimestamp?: string }): Promise<Buffer> {
   const doc = new jsPDF();
   let yPosition = 20;
   const pageHeight = doc.internal.pageSize.height;
@@ -40,8 +40,8 @@ export async function generatePDF(formData: RegistrationFormData): Promise<Buffe
   yPosition += 10;
 
   addText('PATIENT REGISTRATION FORM', margin, 14, true);
-  addText(`Submission ID: ${formData.submissionId}`, margin, 10);
-  addText(`Submitted: ${new Date(formData.submissionTimestamp!).toLocaleString()}`, margin, 10);
+  addText(`Submission ID: ${formData.submissionId || 'N/A'}`, margin, 10);
+  addText(`Submitted: ${new Date().toLocaleString()}`, margin, 10);
   yPosition += 10;
 
   // Patient Information

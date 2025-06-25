@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     // Send secure email with PDF attachment
     try {
       await sendSecureEmail({
-        to: process.env.PRACTICE_EMAIL || 'office@danvillepediatrics.net',
+        to: process.env.PRACTICE_EMAIL || 'Admin@1to1Pediatrics.com',
         subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
         submissionId,
         formData: completeFormData,
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
 
     // Store encrypted form data (optional - for backup/audit purposes)
     try {
-      const encryptedData = encryptData(JSON.stringify(completeFormData));
+      encryptData(JSON.stringify(completeFormData));
       // Here you would typically save to a secure database
       // For now, we'll just log that the data was encrypted successfully
       console.log(`Form data encrypted and ready for storage. Submission ID: ${submissionId}`);

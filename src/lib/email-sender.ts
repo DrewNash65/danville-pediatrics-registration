@@ -1,76 +1,60 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { RegistrationFormData } from '@/lib/validation';
 
 interface EmailOptions {
   to: string;
   subject: string;
   submissionId: string;
-  formData: RegistrationFormData;
+  formData: RegistrationFormData & { submissionTimestamp?: string };
   pdfAttachment: Buffer;
 }
 
 export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   const { to, subject, submissionId, formData, pdfAttachment } = options;
 
-  // Create transporter based on environment
-  const transporter = nodemailer.createTransporter({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-    tls: {
-      rejectUnauthorized: false, // For development only
-    },
-  });
+  // Initialize Resend
+  const resend = new Resend(process.env.RESEND_API_KEY);
 
-  // Verify transporter configuration
-  try {
-    await transporter.verify();
-  } catch (error) {
-    console.error('SMTP configuration error:', error);
-    throw new Error('Email service configuration error');
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY environment variable is required');
   }
 
   // Create email content
   const htmlContent = generateEmailHTML(formData, submissionId);
-  const textContent = generateEmailText(formData, submissionId);
 
-  // Email options
-  const mailOptions = {
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
-    to: to,
-    subject: subject,
-    text: textContent,
-    html: htmlContent,
-    attachments: [
-      {
-        filename: `patient-registration-${submissionId}.pdf`,
-        content: pdfAttachment,
-        contentType: 'application/pdf',
-      },
-    ],
-    // Security headers
-    headers: {
-      'X-Priority': '1',
-      'X-MSMail-Priority': 'High',
-      'Importance': 'high',
-    },
-  };
-
-  // Send email
+  // Send email with Resend
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', {
-      messageId: info.messageId,
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'noreply@danvillepediatrics.net',
+      to: [to],
+      subject: subject,
+      html: htmlContent,
+      attachments: [
+        {
+          filename: `patient-registration-${submissionId}.pdf`,
+          content: pdfAttachment,
+        },
+      ],
+      headers: {
+        'X-Priority': '1',
+        'X-MSMail-Priority': 'High',
+        'Importance': 'high',
+      },
+    });
+
+    if (error) {
+      console.error('Resend email error:', error);
+      throw new Error(`Failed to send email: ${error.message}`);
+    }
+
+    console.log('Email sent successfully via Resend:', {
+      messageId: data?.id,
       submissionId,
       to: to,
     });
   } catch (error) {
     console.error('Email sending error:', error);
-    throw new Error('Failed to send email');
+    throw new Error('Failed to send email via Resend');
   }
 }
 
@@ -94,7 +78,7 @@ function generateEmailHTML(formData: RegistrationFormData, submissionId: string)
       <div class="header">
         <h1>New Patient Registration - Danville Pediatrics</h1>
         <p><strong>Submission ID:</strong> ${submissionId}</p>
-        <p><strong>Submitted:</strong> ${new Date(formData.submissionTimestamp!).toLocaleString()}</p>
+        <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
       </div>
 
       <div class="section">
@@ -156,7 +140,7 @@ function generateEmailText(formData: RegistrationFormData, submissionId: string)
 NEW PATIENT REGISTRATION - DANVILLE PEDIATRICS
 
 Submission ID: ${submissionId}
-Submitted: ${new Date(formData.submissionTimestamp!).toLocaleString()}
+Submitted: ${new Date().toLocaleString()}
 
 PATIENT INFORMATION
 Name: ${formData.patient.firstName} ${formData.patient.lastName}
