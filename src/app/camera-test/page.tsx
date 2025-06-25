@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
+import Link from 'next/link';
 
 export default function CameraTestPage() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -49,7 +50,7 @@ export default function CameraTestPage() {
           </div>
 
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4">Test 2: Camera Input with capture="camera"</h2>
+            <h2 className="text-lg font-semibold mb-4">Test 2: Camera Input with capture="environment" (Alternative)</h2>
             <button
               onClick={() => {
                 const input = document.getElementById('camera-test-2') as HTMLInputElement;
@@ -57,13 +58,13 @@ export default function CameraTestPage() {
               }}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
             >
-              📷 Take Photo (Generic Camera)
+              📷 Take Photo (Environment Alt)
             </button>
             <input
               id="camera-test-2"
               type="file"
               accept="image/*"
-              capture="camera"
+              capture="environment"
               onChange={handleFileChange}
               className="hidden"
             />
@@ -119,12 +120,12 @@ export default function CameraTestPage() {
           </div>
 
           <div className="text-center">
-            <a 
+            <Link
               href="/"
               className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               ← Back to Registration Form
-            </a>
+            </Link>
           </div>
         </div>
       </div>

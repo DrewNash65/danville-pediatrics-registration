@@ -238,7 +238,7 @@ export function FileUpload({
         <input
           type="file"
           accept="image/*"
-          capture="camera"
+          capture="user"
           onChange={handleInputChange}
           className="hidden"
           style={{ display: 'none' }}
