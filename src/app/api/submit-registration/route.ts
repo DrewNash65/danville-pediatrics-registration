@@ -81,14 +81,21 @@ export async function POST(request: NextRequest) {
     
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
+        // Clean the email address (remove mailto: prefix if present)
+        const recipientEmail = (process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com')
+          .replace(/^mailto:/i, '')
+          .trim();
+        
+        console.log('Sending email to (cleaned):', recipientEmail);
+        
         await sendSecureEmail({
-          to: process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com',
+          to: recipientEmail,
           subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
           submissionId,
           formData: completeFormData,
           pdfAttachment: pdfBuffer,
         });
-        console.log('Email sent successfully to:', process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com');
+        console.log('Email sent successfully to:', recipientEmail);
       } catch (emailError) {
         console.error('Email sending error:', emailError);
         return NextResponse.json(
