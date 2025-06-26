@@ -82,9 +82,16 @@ export async function POST(request: NextRequest) {
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
         // Clean the email address (remove mailto: prefix if present)
-        const recipientEmail = (process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com')
+        let recipientEmail = (process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com')
           .replace(/^mailto:/i, '')
           .trim();
+        
+        // TEMPORARY: Use test email while in Resend test mode
+        // TODO: Remove this once domain is verified
+        if (process.env.NODE_ENV === 'production' && !process.env.RESEND_DOMAIN_VERIFIED) {
+          console.log('⚠️  Resend in test mode - redirecting to test email');
+          recipientEmail = 'drew@1to1pediatrics.com'; // Your verified test email
+        }
         
         console.log('Sending email to (cleaned):', recipientEmail);
         
