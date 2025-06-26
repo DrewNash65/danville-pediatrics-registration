@@ -55,9 +55,12 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   } catch (error) {
     console.error('Email sending error:', error);
     console.error('Resend configuration:', {
-      from: 'onboarding@resend.dev', // Use Resend's verified domain
+      from: 'onboarding@resend.dev', // Using Resend's verified domain
       to: to,
-      apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 7) + '...'
+      apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 7) + '...',
+      apiKeyLength: process.env.RESEND_API_KEY?.length,
+      nodeEnv: process.env.NODE_ENV,
+      testMode: process.env.RESEND_TEST_MODE
     });
     
     if (error instanceof Error) {

@@ -86,10 +86,9 @@ export async function POST(request: NextRequest) {
           .replace(/^mailto:/i, '')
           .trim();
         
-        // TEMPORARY: Use test email while in Resend test mode
-        // TODO: Remove this once domain is verified
-        if (process.env.NODE_ENV === 'production' && !process.env.RESEND_DOMAIN_VERIFIED) {
-          console.log('⚠️  Resend in test mode - redirecting to test email');
+        // Handle test mode - can be controlled via environment variable
+        if (process.env.RESEND_TEST_MODE === 'true') {
+          console.log('⚠️  Test mode enabled - redirecting to test email');
           recipientEmail = 'drew@1to1pediatrics.com'; // Your verified test email
         }
         
