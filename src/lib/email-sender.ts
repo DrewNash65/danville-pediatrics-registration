@@ -25,7 +25,7 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   // Send email with Resend
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Use Resend's verified domain
       to: [to],
       subject: subject,
       html: htmlContent,
@@ -55,7 +55,7 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   } catch (error) {
     console.error('Email sending error:', error);
     console.error('Resend configuration:', {
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      from: 'onboarding@resend.dev', // Use Resend's verified domain
       to: to,
       apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 7) + '...'
     });
