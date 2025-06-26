@@ -25,7 +25,7 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
   // Send email with Resend
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'noreply@danvillepediatrics.net',
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to: [to],
       subject: subject,
       html: htmlContent,
@@ -54,6 +54,15 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
     });
   } catch (error) {
     console.error('Email sending error:', error);
+    console.error('Resend configuration:', {
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      to: to,
+      apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 7) + '...'
+    });
+    
+    if (error instanceof Error) {
+      throw new Error(`Resend API error: ${error.message}`);
+    }
     throw new Error('Failed to send email via Resend');
   }
 }

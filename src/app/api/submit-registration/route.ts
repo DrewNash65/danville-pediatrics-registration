@@ -72,6 +72,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Send secure email with PDF attachment (if configured)
+    console.log('Email configuration check:', {
+      hasApiKey: !!process.env.RESEND_API_KEY,
+      apiKeyNotPlaceholder: process.env.RESEND_API_KEY !== 'your-resend-api-key-here',
+      fromEmail: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      toEmail: process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com'
+    });
+    
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
       try {
         await sendSecureEmail({
