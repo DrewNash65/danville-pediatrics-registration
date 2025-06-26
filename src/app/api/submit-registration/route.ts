@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     // Parse the request body
     const body = await request.json();
+    console.log('Received form submission:', JSON.stringify(body, null, 2));
     
     // Validate the form data
     const validationResult = registrationFormSchema.safeParse(body);
@@ -124,6 +125,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Registration submission error:', error);
+    console.error('Error details:', error instanceof Error ? error.stack : 'Unknown error');
     
     // Create error audit log
     const errorAuditLog = createAuditLog(
