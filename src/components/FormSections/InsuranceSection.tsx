@@ -179,7 +179,22 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
         throw new Error('No response content from AI model');
       }
 
-      return JSON.parse(content);
+      // Extract JSON from markdown code blocks if present
+      let cleanContent = content.replace(/```json\s*|\s*```/g, '').trim();
+
+      // Try to find JSON object if it's embedded in other text
+      const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        cleanContent = jsonMatch[0];
+      }
+
+      try {
+        return JSON.parse(cleanContent);
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        console.error('Content that failed to parse:', cleanContent);
+        throw new Error(`Failed to parse AI response as JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+      }
     }
 
     const data = await response.json();
@@ -189,7 +204,22 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
       throw new Error('No response content from AI model');
     }
 
-    return JSON.parse(content);
+    // Extract JSON from markdown code blocks if present
+    let cleanContent = content.replace(/```json\s*|\s*```/g, '').trim();
+
+    // Try to find JSON object if it's embedded in other text
+    const jsonMatch = cleanContent.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      cleanContent = jsonMatch[0];
+    }
+
+    try {
+      return JSON.parse(cleanContent);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      console.error('Content that failed to parse:', cleanContent);
+      throw new Error(`Failed to parse AI response as JSON: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+    }
   };
 
   // Handle auto-fill from uploaded insurance card
