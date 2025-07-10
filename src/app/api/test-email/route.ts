@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     
     // Check environment variables
     const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL;
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com';
     const practiceEmail = process.env.PRACTICE_EMAIL;
     
     console.log('Environment check:');
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     // Send test email
     console.log('Attempting to send test email...');
     const result = await resend.emails.send({
-      from: 'onboarding@resend.dev', // Force use of working email
+      from: fromEmail, // Force use of working email
       to: 'drew@1to1pediatrics.com', // Test email - send to your verified address
       subject: 'Test Email - Danville Pediatrics Registration System',
       html: `

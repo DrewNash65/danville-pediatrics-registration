@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     console.log('Email configuration check:', {
       hasApiKey: !!process.env.RESEND_API_KEY,
       apiKeyNotPlaceholder: process.env.RESEND_API_KEY !== 'your-resend-api-key-here',
-      fromEmail: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      fromEmail: process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com',
       toEmail: process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com'
     });
     
