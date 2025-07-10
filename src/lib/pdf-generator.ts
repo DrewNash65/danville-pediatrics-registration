@@ -30,12 +30,39 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
     doc.text(title, margin, yPos);
     yPos += 10;
 
-    // Add image
+    // Add image - try different formats
     try {
-      doc.addImage(base64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
-      yPos += maxHeight + 10;
+      // Determine image format from file type
+      let format = 'JPEG';
+      if (file.type.includes('png')) {
+        format = 'PNG';
+      } else if (file.type.includes('gif')) {
+        format = 'GIF';
+      } else if (file.type.includes('webp')) {
+        format = 'WEBP';
+      }
+
+      // Try to add the image with proper dimensions
+      try {
+        doc.addImage(base64Data, format, margin, yPos, maxWidth, maxHeight);
+        yPos += maxHeight + 10;
+      } catch (formatError) {
+        // If the specific format fails, try JPEG as fallback
+        console.warn(`Failed to add image as ${format}, trying JPEG:`, formatError);
+        try {
+          doc.addImage(base64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
+          yPos += maxHeight + 10;
+        } catch (jpegError) {
+          console.warn('Failed to add image as JPEG:', jpegError);
+          doc.setFontSize(10);
+          doc.setFont('helvetica', 'normal');
+          doc.text('(Image could not be displayed in PDF)', margin, yPos);
+          yPos += 10;
+        }
+      }
+
     } catch (imageError) {
-      console.warn('Failed to add image to PDF:', imageError);
+      console.warn('Failed to process image for PDF:', imageError);
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
       doc.text('(Image could not be displayed in PDF)', margin, yPos);
@@ -157,10 +184,17 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText(`Subscriber Relationship: ${formData.primaryInsurance.subscriberRelationship}`);
 
   // Add insurance card images if available
+  console.log('Checking for primary insurance images:', {
+    frontImage: !!formData.primaryInsurance.cardFrontImage,
+    backImage: !!formData.primaryInsurance.cardBackImage
+  });
+
   if (formData.primaryInsurance.cardFrontImage) {
+    console.log('Adding primary front image to PDF');
     yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
   }
   if (formData.primaryInsurance.cardBackImage) {
+    console.log('Adding primary back image to PDF');
     yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardBackImage, 'Primary Insurance Card - Back', yPosition + 5);
   }
 
@@ -177,10 +211,17 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addText(`Subscriber Relationship: ${formData.secondaryInsurance.subscriberRelationship}`);
 
     // Add secondary insurance card images if available
+    console.log('Checking for secondary insurance images:', {
+      frontImage: !!formData.secondaryInsurance.cardFrontImage,
+      backImage: !!formData.secondaryInsurance.cardBackImage
+    });
+
     if (formData.secondaryInsurance.cardFrontImage) {
+      console.log('Adding secondary front image to PDF');
       yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardFrontImage, 'Secondary Insurance Card - Front', yPosition + 5);
     }
     if (formData.secondaryInsurance.cardBackImage) {
+      console.log('Adding secondary back image to PDF');
       yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardBackImage, 'Secondary Insurance Card - Back', yPosition + 5);
     }
   }
