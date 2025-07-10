@@ -158,16 +158,27 @@ export function RegistrationForm() {
       formData.append('formData', JSON.stringify(formDataWithoutFiles));
 
       // Add insurance card images if they exist
+      console.log('Form submission - checking for images:', {
+        primaryFront: !!data.primaryInsurance.cardFrontImage,
+        primaryBack: !!data.primaryInsurance.cardBackImage,
+        secondaryFront: !!data.secondaryInsurance?.cardFrontImage,
+        secondaryBack: !!data.secondaryInsurance?.cardBackImage
+      });
+
       if (data.primaryInsurance.cardFrontImage) {
+        console.log('Adding primary front image to FormData');
         formData.append('primaryInsuranceCardFront', data.primaryInsurance.cardFrontImage);
       }
       if (data.primaryInsurance.cardBackImage) {
+        console.log('Adding primary back image to FormData');
         formData.append('primaryInsuranceCardBack', data.primaryInsurance.cardBackImage);
       }
       if (data.secondaryInsurance?.cardFrontImage) {
+        console.log('Adding secondary front image to FormData');
         formData.append('secondaryInsuranceCardFront', data.secondaryInsurance.cardFrontImage);
       }
       if (data.secondaryInsurance?.cardBackImage) {
+        console.log('Adding secondary back image to FormData');
         formData.append('secondaryInsuranceCardBack', data.secondaryInsurance.cardBackImage);
       }
 

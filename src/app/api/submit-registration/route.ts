@@ -26,6 +26,13 @@ export async function POST(request: NextRequest) {
     const secondaryCardFront = requestFormData.get('secondaryInsuranceCardFront') as File | null;
     const secondaryCardBack = requestFormData.get('secondaryInsuranceCardBack') as File | null;
 
+    console.log('API route - received files:', {
+      primaryFront: !!primaryCardFront,
+      primaryBack: !!primaryCardBack,
+      secondaryFront: !!secondaryCardFront,
+      secondaryBack: !!secondaryCardBack
+    });
+
     // Reconstruct the complete form data with files
     const bodyWithFiles = {
       ...body,
