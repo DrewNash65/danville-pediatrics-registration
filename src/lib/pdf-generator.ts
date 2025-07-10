@@ -1,6 +1,57 @@
 import jsPDF from 'jspdf';
 import { RegistrationFormData } from '@/lib/validation';
 
+// Helper function to convert File to base64
+async function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// Helper function to add image to PDF
+async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number): Promise<number> {
+  const margin = 20;
+
+  try {
+    const base64Data = await fileToBase64(file);
+    const pageWidth = doc.internal.pageSize.width;
+    const maxWidth = pageWidth - (margin * 2);
+    const maxHeight = 100; // Maximum height for insurance card images
+
+    // Add title
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, margin, yPos);
+    yPos += 10;
+
+    // Add image
+    try {
+      doc.addImage(base64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
+      yPos += maxHeight + 10;
+    } catch (imageError) {
+      console.warn('Failed to add image to PDF:', imageError);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('(Image could not be displayed in PDF)', margin, yPos);
+      yPos += 10;
+    }
+
+    return yPos;
+  } catch (error) {
+    console.warn('Failed to process image for PDF:', error);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('(Image could not be processed)', margin, yPos);
+    return yPos + 10;
+  }
+}
+
 export async function generatePDF(formData: RegistrationFormData & { submissionId?: string; submissionTimestamp?: string }): Promise<Buffer> {
   const doc = new jsPDF();
   let yPosition = 20;
@@ -105,6 +156,14 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText(`Subscriber DOB: ${formData.primaryInsurance.subscriberDateOfBirth}`);
   addText(`Subscriber Relationship: ${formData.primaryInsurance.subscriberRelationship}`);
 
+  // Add insurance card images if available
+  if (formData.primaryInsurance.cardFrontImage) {
+    yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
+  }
+  if (formData.primaryInsurance.cardBackImage) {
+    yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardBackImage, 'Primary Insurance Card - Back', yPosition + 5);
+  }
+
   // Secondary Insurance (if provided)
   if (formData.secondaryInsurance) {
     addSection('SECONDARY INSURANCE');
@@ -116,6 +175,14 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addText(`Subscriber: ${formData.secondaryInsurance.subscriberName}`);
     addText(`Subscriber DOB: ${formData.secondaryInsurance.subscriberDateOfBirth}`);
     addText(`Subscriber Relationship: ${formData.secondaryInsurance.subscriberRelationship}`);
+
+    // Add secondary insurance card images if available
+    if (formData.secondaryInsurance.cardFrontImage) {
+      yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardFrontImage, 'Secondary Insurance Card - Front', yPosition + 5);
+    }
+    if (formData.secondaryInsurance.cardBackImage) {
+      yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardBackImage, 'Secondary Insurance Card - Back', yPosition + 5);
+    }
   }
 
   // Guarantor Information

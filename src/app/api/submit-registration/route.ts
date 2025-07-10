@@ -6,12 +6,43 @@ import { sendSecureEmail } from '@/lib/email-sender';
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse the request body
-    const body = await request.json();
+    // Parse the request body (FormData)
+    const requestFormData = await request.formData();
+    const formDataJson = requestFormData.get('formData') as string;
+
+    if (!formDataJson) {
+      return NextResponse.json(
+        { success: false, message: 'No form data provided' },
+        { status: 400 }
+      );
+    }
+
+    const body = JSON.parse(formDataJson);
     console.log('Received form submission:', JSON.stringify(body, null, 2));
-    
+
+    // Add file attachments back to the form data
+    const primaryCardFront = requestFormData.get('primaryInsuranceCardFront') as File | null;
+    const primaryCardBack = requestFormData.get('primaryInsuranceCardBack') as File | null;
+    const secondaryCardFront = requestFormData.get('secondaryInsuranceCardFront') as File | null;
+    const secondaryCardBack = requestFormData.get('secondaryInsuranceCardBack') as File | null;
+
+    // Reconstruct the complete form data with files
+    const bodyWithFiles = {
+      ...body,
+      primaryInsurance: {
+        ...body.primaryInsurance,
+        cardFrontImage: primaryCardFront,
+        cardBackImage: primaryCardBack,
+      },
+      secondaryInsurance: body.secondaryInsurance ? {
+        ...body.secondaryInsurance,
+        cardFrontImage: secondaryCardFront,
+        cardBackImage: secondaryCardBack,
+      } : undefined,
+    };
+
     // Validate the form data
-    const validationResult = registrationFormSchema.safeParse(body);
+    const validationResult = registrationFormSchema.safeParse(bodyWithFiles);
     
     if (!validationResult.success) {
       console.error('Validation errors:', validationResult.error.errors);
@@ -25,15 +56,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const formData = validationResult.data;
-    
+    const validatedFormData = validationResult.data;
+
     // Generate submission ID and timestamp
     const submissionId = generateSubmissionId();
     const submissionTimestamp = new Date().toISOString();
-    
+
     // Add metadata to form data
     const completeFormData = {
-      ...formData,
+      ...validatedFormData,
       submissionId,
       submissionTimestamp,
     };
@@ -44,8 +75,8 @@ export async function POST(request: NextRequest) {
       'patient_registration',
       {
         submissionId,
-        patientName: `${formData.patient.firstName} ${formData.patient.lastName}`,
-        parentEmail: formData.parentGuardian1.email,
+        patientName: `${validatedFormData.patient.firstName} ${validatedFormData.patient.lastName}`,
+        parentEmail: validatedFormData.parentGuardian1.email,
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
         userAgent: request.headers.get('user-agent') || 'unknown',
       }
@@ -96,7 +127,7 @@ export async function POST(request: NextRequest) {
         
         await sendSecureEmail({
           to: recipientEmail.trim(),
-          subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
+          subject: `New Patient Registration - ${validatedFormData.patient.firstName} ${validatedFormData.patient.lastName}`,
           submissionId,
           formData: completeFormData,
           pdfAttachment: pdfBuffer,

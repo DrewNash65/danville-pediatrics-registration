@@ -33,6 +33,7 @@ export function FileUpload({
   const [showCameraOptions, setShowCameraOptions] = useState(false);
   const [isCapturing, setIsCapturing] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -41,9 +42,10 @@ export function FileUpload({
 
   const handleFileChange = (file: File | null) => {
     setUploadError(null);
-    
+
     if (!file) {
       setSelectedFile(null);
+      setImagePreview(null);
       onFileSelect(null);
       return;
     }
@@ -55,6 +57,18 @@ export function FileUpload({
     }
 
     setSelectedFile(file);
+
+    // Create image preview for image files
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setImagePreview(null);
+    }
+
     onFileSelect(file);
   };
 
@@ -175,6 +189,7 @@ export function FileUpload({
 
   const handleRemove = () => {
     setSelectedFile(null);
+    setImagePreview(null);
     setUploadError(null);
     onFileSelect(null);
     setShowCameraOptions(false);
@@ -246,12 +261,29 @@ export function FileUpload({
         />
 
         {selectedFile ? (
-          <div className="space-y-2">
-            <div className="text-green-600">
-              <svg className="mx-auto h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
+          <div className="space-y-3">
+            {imagePreview ? (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="mx-auto max-w-full max-h-48 rounded-lg shadow-md border border-gray-200"
+                />
+                <div className="absolute top-2 right-2">
+                  <div className="bg-green-500 text-white rounded-full p-1">
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="text-green-600">
+                <svg className="mx-auto h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            )}
             <div className="text-sm text-gray-900 font-medium">{selectedFile.name}</div>
             <div className="text-xs text-gray-500">{formatFileSize(selectedFile.size)}</div>
             <button

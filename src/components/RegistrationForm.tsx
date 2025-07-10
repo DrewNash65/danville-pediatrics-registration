@@ -137,12 +137,43 @@ export function RegistrationForm() {
     setSubmitError(null);
 
     try {
+      // Create FormData to handle file uploads
+      const formData = new FormData();
+
+      // Add all form fields as JSON, excluding files
+      const formDataWithoutFiles = {
+        ...data,
+        primaryInsurance: {
+          ...data.primaryInsurance,
+          cardFrontImage: undefined,
+          cardBackImage: undefined,
+        },
+        secondaryInsurance: data.secondaryInsurance ? {
+          ...data.secondaryInsurance,
+          cardFrontImage: undefined,
+          cardBackImage: undefined,
+        } : undefined,
+      };
+
+      formData.append('formData', JSON.stringify(formDataWithoutFiles));
+
+      // Add insurance card images if they exist
+      if (data.primaryInsurance.cardFrontImage) {
+        formData.append('primaryInsuranceCardFront', data.primaryInsurance.cardFrontImage);
+      }
+      if (data.primaryInsurance.cardBackImage) {
+        formData.append('primaryInsuranceCardBack', data.primaryInsurance.cardBackImage);
+      }
+      if (data.secondaryInsurance?.cardFrontImage) {
+        formData.append('secondaryInsuranceCardFront', data.secondaryInsurance.cardFrontImage);
+      }
+      if (data.secondaryInsurance?.cardBackImage) {
+        formData.append('secondaryInsuranceCardBack', data.secondaryInsurance.cardBackImage);
+      }
+
       const response = await fetch('/api/submit-registration', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: formData, // Use FormData instead of JSON
       });
 
       const result = await response.json();

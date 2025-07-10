@@ -88,6 +88,8 @@ export const insuranceSchema = z.object({
   subscriberName: z.string().min(1, 'Subscriber name is required'),
   subscriberDateOfBirth: dateSchema,
   subscriberRelationship: z.string().min(1, 'Subscriber relationship is required'),
+  cardFrontImage: z.instanceof(File).optional(),
+  cardBackImage: z.instanceof(File).optional(),
 });
 
 // Guarantor schema
