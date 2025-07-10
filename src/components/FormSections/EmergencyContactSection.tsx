@@ -83,6 +83,14 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
     return inputRef;
   };
 
+  // Create all refs at the top level to avoid conditional hook calls
+  const emergency1HomeRef = usePhoneInput('emergencyContact1.phoneNumbers.home');
+  const emergency1CellRef = usePhoneInput('emergencyContact1.phoneNumbers.cell');
+  const emergency1WorkRef = usePhoneInput('emergencyContact1.phoneNumbers.work');
+  const emergency2HomeRef = usePhoneInput('emergencyContact2.phoneNumbers.home');
+  const emergency2CellRef = usePhoneInput('emergencyContact2.phoneNumbers.cell');
+  const emergency2WorkRef = usePhoneInput('emergencyContact2.phoneNumbers.work');
+
   return (
     <div className="space-y-8">
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -142,7 +150,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
             <input
               type="tel"
               {...register('emergencyContact1.phoneNumbers.home')}
-              ref={usePhoneInput('emergencyContact1.phoneNumbers.home')}
+              ref={emergency1HomeRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -157,7 +165,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
             <input
               type="tel"
               {...register('emergencyContact1.phoneNumbers.cell')}
-              ref={usePhoneInput('emergencyContact1.phoneNumbers.cell')}
+              ref={emergency1CellRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -172,7 +180,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
             <input
               type="tel"
               {...register('emergencyContact1.phoneNumbers.work')}
-              ref={usePhoneInput('emergencyContact1.phoneNumbers.work')}
+              ref={emergency1WorkRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -246,7 +254,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
                 <input
                   type="tel"
                   {...register('emergencyContact2.phoneNumbers.home')}
-                  ref={usePhoneInput('emergencyContact2.phoneNumbers.home')}
+                  ref={emergency2HomeRef}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
@@ -261,7 +269,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
                 <input
                   type="tel"
                   {...register('emergencyContact2.phoneNumbers.cell')}
-                  ref={usePhoneInput('emergencyContact2.phoneNumbers.cell')}
+                  ref={emergency2CellRef}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
@@ -276,7 +284,7 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
                 <input
                   type="tel"
                   {...register('emergencyContact2.phoneNumbers.work')}
-                  ref={usePhoneInput('emergencyContact2.phoneNumbers.work')}
+                  ref={emergency2WorkRef}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}

@@ -127,6 +127,10 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
     return inputRef;
   };
 
+  // Create all refs at the top level to avoid conditional hook calls
+  const homePhoneRef = usePhoneInput('patient.phoneNumbers.home');
+  const cellPhoneRef = usePhoneInput('patient.phoneNumbers.cell');
+
 
 
   return (
@@ -248,7 +252,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
             <input
               type="tel"
               {...register('patient.phoneNumbers.home')}
-              ref={usePhoneInput('patient.phoneNumbers.home')}
+              ref={homePhoneRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -263,7 +267,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
             <input
               type="tel"
               {...register('patient.phoneNumbers.cell')}
-              ref={usePhoneInput('patient.phoneNumbers.cell')}
+              ref={cellPhoneRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}

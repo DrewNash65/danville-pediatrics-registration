@@ -134,6 +134,10 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
     return inputRef;
   };
 
+  // Create all refs at the top level to avoid conditional hook calls
+  const guarantorPhoneRef = usePhoneInput('guarantor.phoneNumber');
+  const employerPhoneRef = usePhoneInput('guarantor.employer.phoneNumber');
+
   const formatSSN = (value: string) => {
     const numbers = value.replace(/\D/g, '');
     if (numbers.length <= 3) return numbers;
@@ -270,7 +274,7 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
             <input
               type="tel"
               {...register('guarantor.phoneNumber')}
-              ref={usePhoneInput('guarantor.phoneNumber')}
+              ref={guarantorPhoneRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -342,7 +346,7 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
               <input
                 type="tel"
                 {...register('guarantor.employer.phoneNumber')}
-                ref={usePhoneInput('guarantor.employer.phoneNumber')}
+                ref={employerPhoneRef}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="(XXX) XXX-XXXX"
                 maxLength={14}

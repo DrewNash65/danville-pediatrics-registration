@@ -81,6 +81,12 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
     return inputRef;
   };
 
+  // Create all refs at the top level to avoid conditional hook calls
+  const parent1CellRef = usePhoneInput('parentGuardian1.phoneNumbers.cell');
+  const parent1WorkRef = usePhoneInput('parentGuardian1.phoneNumbers.work');
+  const parent2CellRef = usePhoneInput('parentGuardian2.phoneNumbers.cell');
+  const parent2WorkRef = usePhoneInput('parentGuardian2.phoneNumbers.work');
+
   return (
     <div className="space-y-8">
       {/* Primary Parent/Guardian */}
@@ -148,7 +154,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             <input
               type="tel"
               {...register('parentGuardian1.phoneNumbers.cell')}
-              ref={usePhoneInput('parentGuardian1.phoneNumbers.cell')}
+              ref={parent1CellRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -163,7 +169,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             <input
               type="tel"
               {...register('parentGuardian1.phoneNumbers.work')}
-              ref={usePhoneInput('parentGuardian1.phoneNumbers.work')}
+              ref={parent1WorkRef}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
@@ -270,7 +276,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
                 <input
                   type="tel"
                   {...register('parentGuardian2.phoneNumbers.cell')}
-                  ref={usePhoneInput('parentGuardian2.phoneNumbers.cell')}
+                  ref={parent2CellRef}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
@@ -285,7 +291,7 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
                 <input
                   type="tel"
                   {...register('parentGuardian2.phoneNumbers.work')}
-                  ref={usePhoneInput('parentGuardian2.phoneNumbers.work')}
+                  ref={parent2WorkRef}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
