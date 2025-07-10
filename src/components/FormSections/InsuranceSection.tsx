@@ -63,7 +63,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
     const apiKey = process.env.NEXT_PUBLIC_DANVILLE_PEDS_INSURANCE_FORM_KEY;
 
     if (!apiKey) {
-      throw new Error('OpenRouter API key not configured');
+      throw new Error('AI auto-fill feature is not configured. Please enter insurance information manually.');
     }
 
     const systemPrompt = `You are an expert at analyzing insurance card images and extracting key information.
@@ -94,45 +94,9 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
 
     If you cannot clearly read any field, set it to null. Prioritize accuracy over completeness.`;
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': window.location.origin,
-        'X-Title': 'HIPAA Insurance Form Auto-Fill'
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-flash-1.5',
-        messages: [
-          {
-            role: 'system',
-            content: systemPrompt
-          },
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text: 'Please analyze this insurance card image and extract the information in the specified JSON format.'
-              },
-              {
-                type: 'image_url',
-                image_url: {
-                  url: `data:image/jpeg;base64,${imageBase64}`
-                }
-              }
-            ]
-          }
-        ],
-        max_tokens: 1000,
-        temperature: 0.1
-      })
-    });
-
-    if (!response.ok) {
-      // Try fallback to GPT-4o if Gemini fails
-      const fallbackResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    let response;
+    try {
+      response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -141,7 +105,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
           'X-Title': 'HIPAA Insurance Form Auto-Fill'
         },
         body: JSON.stringify({
-          model: 'openai/gpt-4o',
+          model: 'google/gemini-flash-1.5',
           messages: [
             {
               role: 'system',
@@ -167,9 +131,62 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
           temperature: 0.1
         })
       });
+    } catch (networkError) {
+      console.error('Network error connecting to OpenRouter API:', networkError);
+      throw new Error('Unable to connect to AI service. Please check your internet connection and try again, or enter insurance information manually.');
+    }
+
+    if (!response.ok) {
+      // Try fallback to GPT-4o if Gemini fails
+      let fallbackResponse;
+      try {
+        fallbackResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            'HTTP-Referer': window.location.origin,
+            'X-Title': 'HIPAA Insurance Form Auto-Fill'
+          },
+          body: JSON.stringify({
+            model: 'openai/gpt-4o',
+            messages: [
+              {
+                role: 'system',
+                content: systemPrompt
+              },
+              {
+                role: 'user',
+                content: [
+                  {
+                    type: 'text',
+                    text: 'Please analyze this insurance card image and extract the information in the specified JSON format.'
+                  },
+                  {
+                    type: 'image_url',
+                    image_url: {
+                      url: `data:image/jpeg;base64,${imageBase64}`
+                    }
+                  }
+                ]
+              }
+            ],
+            max_tokens: 1000,
+            temperature: 0.1
+          })
+        });
+      } catch (fallbackNetworkError) {
+        console.error('Network error on fallback API call:', fallbackNetworkError);
+        throw new Error('AI service is currently unavailable. Please enter insurance information manually.');
+      }
 
       if (!fallbackResponse.ok) {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        const errorMessage = fallbackResponse.status === 401
+          ? 'AI service authentication failed. Please contact support.'
+          : fallbackResponse.status === 429
+          ? 'AI service is busy. Please try again in a moment or enter information manually.'
+          : `AI service error (${fallbackResponse.status}). Please enter insurance information manually.`;
+        throw new Error(errorMessage);
       }
 
       const fallbackData = await fallbackResponse.json();
@@ -222,6 +239,19 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
     }
   };
 
+  // Simple connectivity test
+  const testConnectivity = async (): Promise<boolean> => {
+    try {
+      const response = await fetch('https://httpbin.org/get', {
+        method: 'GET',
+        signal: AbortSignal.timeout(5000) // 5 second timeout
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  };
+
   // Handle auto-fill from uploaded insurance card
   const handleAutoFillFromCard = useCallback(async (file: File, isPrimary: boolean = true) => {
     setIsProcessingAI(true);
@@ -262,7 +292,20 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
 
     } catch (error) {
       console.error('Error processing insurance card:', error);
-      setAiError(`Unable to extract information from card: ${error instanceof Error ? error.message : 'Unknown error'}. Please enter information manually.`);
+
+      // Test connectivity to provide better error messages
+      const hasConnectivity = await testConnectivity();
+
+      let errorMessage = '';
+      if (!hasConnectivity) {
+        errorMessage = 'No internet connection detected. Please check your network connection and try again.';
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = 'Unknown error occurred while processing the insurance card.';
+      }
+
+      setAiError(errorMessage);
     } finally {
       setIsProcessingAI(false);
     }
@@ -293,13 +336,14 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
           )}
 
           {aiError && (
-            <div className="flex items-start space-x-3 text-red-600">
+            <div className="flex items-start space-x-3 text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-4">
               <svg className="h-5 w-5 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
               <div>
-                <p className="text-sm font-medium">AI Processing Error</p>
+                <p className="text-sm font-medium">AI Auto-Fill Unavailable</p>
                 <p className="text-sm">{aiError}</p>
+                <p className="text-xs mt-1 text-amber-700">💡 You can still complete the form by entering insurance information manually below.</p>
               </div>
             </div>
           )}
