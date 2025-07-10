@@ -33,6 +33,22 @@ export async function POST(request: NextRequest) {
       secondaryBack: !!secondaryCardBack
     });
 
+    // Log file details if they exist
+    if (primaryCardFront) {
+      console.log('Primary front file details:', {
+        name: primaryCardFront.name,
+        size: primaryCardFront.size,
+        type: primaryCardFront.type
+      });
+    }
+    if (primaryCardBack) {
+      console.log('Primary back file details:', {
+        name: primaryCardBack.name,
+        size: primaryCardBack.size,
+        type: primaryCardBack.type
+      });
+    }
+
     // Reconstruct the complete form data with files
     const bodyWithFiles = {
       ...body,
