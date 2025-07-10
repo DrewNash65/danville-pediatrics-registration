@@ -60,7 +60,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
 
   // Extract insurance data using OpenRouter API
   const extractInsuranceData = async (imageBase64: string): Promise<ExtractedInsuranceData> => {
-    const apiKey = process.env.NEXT_PUBLIC_OPENROUTER_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_DANVILLE_PEDS_INSURANCE_FORM_KEY;
 
     if (!apiKey) {
       throw new Error('OpenRouter API key not configured');
