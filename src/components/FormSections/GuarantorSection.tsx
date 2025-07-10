@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
@@ -78,7 +78,7 @@ const RELATIONSHIP_OPTIONS = [
 ];
 
 export function GuarantorSection({ form }: GuarantorSectionProps) {
-  const { register, formState: { errors }, watch } = form;
+  const { register, formState: { errors }, watch, setValue } = form;
   const [hasEmployer, setHasEmployer] = useState(false);
 
   const formatPhoneNumber = (value: string) => {
@@ -86,6 +86,52 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
     if (numbers.length <= 3) return numbers;
     if (numbers.length <= 6) return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
     return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+  };
+
+  // Custom hook for handling autofill and phone formatting
+  const usePhoneInput = (fieldName: string) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      const input = inputRef.current;
+      if (!input) return;
+
+      const handleAutofill = () => {
+        // Check for autofilled value after a short delay
+        setTimeout(() => {
+          if (input.value && input.value !== '') {
+            const formatted = formatPhoneNumber(input.value);
+            input.value = formatted;
+            setValue(fieldName as any, formatted);
+          }
+        }, 100);
+      };
+
+      const handleInput = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        const formatted = formatPhoneNumber(target.value);
+        target.value = formatted;
+        setValue(fieldName as any, formatted);
+      };
+
+      // Listen for various autofill events
+      input.addEventListener('input', handleInput);
+      input.addEventListener('change', handleAutofill);
+      input.addEventListener('blur', handleAutofill);
+
+      // Check for autofill on mount and periodically
+      handleAutofill();
+      const interval = setInterval(handleAutofill, 500);
+
+      return () => {
+        input.removeEventListener('input', handleInput);
+        input.removeEventListener('change', handleAutofill);
+        input.removeEventListener('blur', handleAutofill);
+        clearInterval(interval);
+      };
+    }, [fieldName]);
+
+    return inputRef;
   };
 
   const formatSSN = (value: string) => {
@@ -224,12 +270,11 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
             <input
               type="tel"
               {...register('guarantor.phoneNumber')}
+              ref={usePhoneInput('guarantor.phoneNumber')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
-              onChange={(e) => {
-                e.target.value = formatPhoneNumber(e.target.value);
-              }}
+              autoComplete="tel"
             />
           </FormField>
 
@@ -297,12 +342,11 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
               <input
                 type="tel"
                 {...register('guarantor.employer.phoneNumber')}
+                ref={usePhoneInput('guarantor.employer.phoneNumber')}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="(XXX) XXX-XXXX"
                 maxLength={14}
-                onChange={(e) => {
-                  e.target.value = formatPhoneNumber(e.target.value);
-                }}
+                autoComplete="tel-national"
               />
             </FormField>
           </div>

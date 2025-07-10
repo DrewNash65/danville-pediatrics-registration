@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
@@ -33,6 +33,52 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
     if (numbers.length <= 3) return numbers;
     if (numbers.length <= 6) return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
     return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+  };
+
+  // Custom hook for handling autofill and phone formatting
+  const usePhoneInput = (fieldName: string) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+      const input = inputRef.current;
+      if (!input) return;
+
+      const handleAutofill = () => {
+        // Check for autofilled value after a short delay
+        setTimeout(() => {
+          if (input.value && input.value !== '') {
+            const formatted = formatPhoneNumber(input.value);
+            input.value = formatted;
+            setValue(fieldName as any, formatted);
+          }
+        }, 100);
+      };
+
+      const handleInput = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        const formatted = formatPhoneNumber(target.value);
+        target.value = formatted;
+        setValue(fieldName as any, formatted);
+      };
+
+      // Listen for various autofill events
+      input.addEventListener('input', handleInput);
+      input.addEventListener('change', handleAutofill);
+      input.addEventListener('blur', handleAutofill);
+
+      // Check for autofill on mount and periodically
+      handleAutofill();
+      const interval = setInterval(handleAutofill, 500);
+
+      return () => {
+        input.removeEventListener('input', handleInput);
+        input.removeEventListener('change', handleAutofill);
+        input.removeEventListener('blur', handleAutofill);
+        clearInterval(interval);
+      };
+    }, [fieldName]);
+
+    return inputRef;
   };
 
   return (
@@ -102,15 +148,11 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             <input
               type="tel"
               {...register('parentGuardian1.phoneNumbers.cell')}
+              ref={usePhoneInput('parentGuardian1.phoneNumbers.cell')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
-              onInput={(e) => {
-                const target = e.target as HTMLInputElement;
-                const formatted = formatPhoneNumber(target.value);
-                target.value = formatted;
-                setValue('parentGuardian1.phoneNumbers.cell', formatted);
-              }}
+              autoComplete="tel"
             />
           </FormField>
 
@@ -121,15 +163,11 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             <input
               type="tel"
               {...register('parentGuardian1.phoneNumbers.work')}
+              ref={usePhoneInput('parentGuardian1.phoneNumbers.work')}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="(XXX) XXX-XXXX"
               maxLength={14}
-              onInput={(e) => {
-                const target = e.target as HTMLInputElement;
-                const formatted = formatPhoneNumber(target.value);
-                target.value = formatted;
-                setValue('parentGuardian1.phoneNumbers.work', formatted);
-              }}
+              autoComplete="tel-national"
             />
           </FormField>
         </div>
@@ -232,15 +270,11 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
                 <input
                   type="tel"
                   {...register('parentGuardian2.phoneNumbers.cell')}
+                  ref={usePhoneInput('parentGuardian2.phoneNumbers.cell')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
-                  onInput={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    const formatted = formatPhoneNumber(target.value);
-                    target.value = formatted;
-                    setValue('parentGuardian2.phoneNumbers.cell', formatted);
-                  }}
+                  autoComplete="tel"
                 />
               </FormField>
 
@@ -251,15 +285,11 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
                 <input
                   type="tel"
                   {...register('parentGuardian2.phoneNumbers.work')}
+                  ref={usePhoneInput('parentGuardian2.phoneNumbers.work')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="(XXX) XXX-XXXX"
                   maxLength={14}
-                  onInput={(e) => {
-                    const target = e.target as HTMLInputElement;
-                    const formatted = formatPhoneNumber(target.value);
-                    target.value = formatted;
-                    setValue('parentGuardian2.phoneNumbers.work', formatted);
-                  }}
+                  autoComplete="tel-national"
                 />
               </FormField>
             </div>
