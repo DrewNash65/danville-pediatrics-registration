@@ -61,14 +61,14 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addText(`Cell Phone: ${formData.patient.phoneNumbers.cell}`);
   }
   if (formData.patient.email) {
-    addText(`Email: ${formData.patient.email}`);
+    addText(`Email: ${formData.patient.email.trim()}`);
   }
 
   // Parent/Guardian Information
   addSection('PRIMARY PARENT/GUARDIAN');
   addText(`Name: ${formData.parentGuardian1.firstName} ${formData.parentGuardian1.lastName}`);
   addText(`Relationship: ${formData.parentGuardian1.relationship}`);
-  addText(`Email: ${formData.parentGuardian1.email}`);
+  addText(`Email: ${formData.parentGuardian1.email.trim()}`);
   addText(`Primary Contact: ${formData.parentGuardian1.isPrimaryContact ? 'Yes' : 'No'}`);
 
   if (formData.parentGuardian1.phoneNumbers.cell) {
@@ -83,7 +83,7 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addSection('SECONDARY PARENT/GUARDIAN');
     addText(`Name: ${formData.parentGuardian2.firstName} ${formData.parentGuardian2.lastName}`);
     addText(`Relationship: ${formData.parentGuardian2.relationship}`);
-    addText(`Email: ${formData.parentGuardian2.email}`);
+    addText(`Email: ${formData.parentGuardian2.email.trim()}`);
     addText(`Primary Contact: ${formData.parentGuardian2.isPrimaryContact ? 'Yes' : 'No'}`);
 
     if (formData.parentGuardian2.phoneNumbers.cell) {
@@ -126,7 +126,7 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     addText(`SSN: ${formData.guarantor.socialSecurityNumber}`);
   }
   addText(`Phone: ${formData.guarantor.phoneNumber}`);
-  addText(`Email: ${formData.guarantor.email}`);
+  addText(`Email: ${formData.guarantor.email.trim()}`);
   
   addText('Address:');
   addText(`  ${formData.guarantor.address.street}`);

@@ -85,7 +85,9 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
           >
             <input
               type="email"
-              {...register('parentGuardian1.email')}
+              {...register('parentGuardian1.email', {
+                setValueAs: (value) => value?.trim() || ''
+              })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="parent@example.com"
             />
@@ -213,7 +215,9 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
               >
                 <input
                   type="email"
-                  {...register('parentGuardian2.email')}
+                  {...register('parentGuardian2.email', {
+                    setValueAs: (value) => value?.trim() || ''
+                  })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="parent@example.com"
                 />

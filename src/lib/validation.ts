@@ -16,8 +16,8 @@ const requiredPhoneSchema = z.string()
   }, 'Phone number must be in format (XXX) XXX-XXXX');
 
 // Email validation
-const emailSchema = z.string().email('Invalid email address').optional();
-const requiredEmailSchema = z.string().email('Invalid email address');
+const emailSchema = z.string().trim().email('Invalid email address').optional();
+const requiredEmailSchema = z.string().trim().email('Invalid email address');
 
 // Date validation
 const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');

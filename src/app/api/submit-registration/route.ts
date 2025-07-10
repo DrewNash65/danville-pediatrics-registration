@@ -75,8 +75,8 @@ export async function POST(request: NextRequest) {
     console.log('Email configuration check:', {
       hasApiKey: !!process.env.RESEND_API_KEY,
       apiKeyNotPlaceholder: process.env.RESEND_API_KEY !== 'your-resend-api-key-here',
-      fromEmail: process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com',
-      toEmail: process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com'
+      fromEmail: (process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com').trim(),
+      toEmail: (process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com').trim()
     });
     
     if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== 'your-resend-api-key-here') {
@@ -89,13 +89,13 @@ export async function POST(request: NextRequest) {
         // Handle test mode - can be controlled via environment variable
         if (process.env.RESEND_TEST_MODE === 'true') {
           console.log('⚠️  Test mode enabled - redirecting to test email');
-          recipientEmail = 'drew@1to1pediatrics.com'; // Your verified test email
+          recipientEmail = 'drew@1to1pediatrics.com'.trim(); // Your verified test email
         }
         
         console.log('Sending email to (cleaned):', recipientEmail);
         
         await sendSecureEmail({
-          to: recipientEmail,
+          to: recipientEmail.trim(),
           subject: `New Patient Registration - ${formData.patient.firstName} ${formData.patient.lastName}`,
           submissionId,
           formData: completeFormData,
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.log('⚠️  EMAIL NOT CONFIGURED - Resend API key needed');
-      console.log('📧 Would send registration to:', process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com');
+      console.log('📧 Would send registration to:', (process.env.PRACTICE_EMAIL || 'Admin@DanvillePediatrics.com').trim());
       console.log('📄 PDF generated successfully for submission:', submissionId);
       console.log('🔧 To enable email: Set RESEND_API_KEY in .env.local');
     }

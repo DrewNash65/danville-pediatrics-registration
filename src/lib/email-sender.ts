@@ -24,9 +24,16 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
 
   // Send email with Resend
   try {
+    console.log('Sending email via Resend:', {
+      from: (process.env.RESEND_FROM_EMAIL || 'noreply@1to1pediatrics.com').trim(),
+      to: to.trim(),
+      subject: subject,
+      hasAttachment: !!pdfAttachment
+    });
+
     const { data, error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com', // Use Resend's verified domain
-      to: [to],
+      from: (process.env.RESEND_FROM_EMAIL || 'noreply@1to1pediatrics.com').trim(), // Use Resend's verified domain
+      to: [to.trim()],
       subject: subject,
       html: htmlContent,
       attachments: [
@@ -50,13 +57,13 @@ export async function sendSecureEmail(options: EmailOptions): Promise<void> {
     console.log('Email sent successfully via Resend:', {
       messageId: data?.id,
       submissionId,
-      to: to,
+      to: to.trim(),
     });
   } catch (error) {
     console.error('Email sending error:', error);
     console.error('Resend configuration:', {
-      from: process.env.RESEND_FROM_EMAIL || 'admin@1to1pediatrics.com', // Using Resend's verified domain
-      to: to,
+      from: (process.env.RESEND_FROM_EMAIL || 'noreply@1to1pediatrics.com').trim(), // Using Resend's verified domain
+      to: to.trim(),
       apiKeyPrefix: process.env.RESEND_API_KEY?.substring(0, 7) + '...',
       apiKeyLength: process.env.RESEND_API_KEY?.length,
       nodeEnv: process.env.NODE_ENV,
@@ -138,7 +145,7 @@ function generateEmailHTML(formData: RegistrationFormData, submissionId: string)
           <li>Add patient to practice management system</li>
         </ul>
         <p><strong>Contact Information:</strong><br>
-        Primary Contact: ${formData.parentGuardian1.email}<br>
+        Primary Contact: ${formData.parentGuardian1.email.trim()}<br>
         Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.work || 'Not provided'}</p>
       </div>
     </body>
@@ -160,7 +167,7 @@ Gender: ${formData.patient.gender}
 
 PRIMARY PARENT/GUARDIAN
 Name: ${formData.parentGuardian1.firstName} ${formData.parentGuardian1.lastName}
-Email: ${formData.parentGuardian1.email}
+Email: ${formData.parentGuardian1.email.trim()}
 Relationship: ${formData.parentGuardian1.relationship}
 Primary Contact: ${formData.parentGuardian1.isPrimaryContact ? 'Yes' : 'No'}
 
@@ -186,7 +193,7 @@ NEXT STEPS:
 - Add patient to practice management system
 
 Contact Information:
-Primary Contact: ${formData.parentGuardian1.email}
+Primary Contact: ${formData.parentGuardian1.email.trim()}
 Phone: ${formData.parentGuardian1.phoneNumbers.cell || formData.parentGuardian1.phoneNumbers.work || 'Not provided'}
 
 This registration was submitted securely through the Danville Pediatrics HIPAA-compliant online form.
