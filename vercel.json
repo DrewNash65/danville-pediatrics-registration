@@ -10,6 +10,8 @@
       "maxDuration": 30
     }
   },
+
+  "public": true,
   "headers": [
     {
       "source": "/api/(.*)",
