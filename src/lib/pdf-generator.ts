@@ -3,13 +3,23 @@ import { RegistrationFormData } from '@/lib/validation';
 
 // Helper function to convert File to base64
 async function fileToBase64(file: File): Promise<string> {
+  console.log('fileToBase64 called with file:', {
+    name: file.name,
+    size: file.size,
+    type: file.type
+  });
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
       const result = reader.result as string;
+      console.log('FileReader onload - result type:', typeof result, 'length:', result?.length);
       resolve(result);
     };
-    reader.onerror = reject;
+    reader.onerror = (error) => {
+      console.error('FileReader error:', error);
+      reject(error);
+    };
     reader.readAsDataURL(file);
   });
 }
@@ -19,7 +29,10 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
   const margin = 20;
 
   try {
+    console.log(`Converting ${title} to base64...`);
     const base64Data = await fileToBase64(file);
+    console.log(`Base64 conversion successful for ${title}, length:`, base64Data.length);
+
     const pageWidth = doc.internal.pageSize.width;
     const maxWidth = pageWidth - (margin * 2);
     const maxHeight = 100; // Maximum height for insurance card images

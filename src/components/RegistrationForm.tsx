@@ -201,7 +201,21 @@ export function RegistrationForm() {
 
       console.log('API response status:', response.status);
 
-      const result = await response.json();
+      // Get response body to check for server-side debugging info
+      const responseText = await response.text();
+      console.log('API response body:', responseText);
+
+      // Try to parse as JSON
+      let responseData;
+      try {
+        responseData = JSON.parse(responseText);
+        console.log('Parsed response data:', responseData);
+      } catch (e) {
+        console.log('Response is not JSON:', responseText);
+      }
+
+      // Use the already parsed response data
+      const result = responseData || { success: false, message: 'Invalid response' };
 
       if (result.success) {
         setSubmitSuccess(true);
