@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import { RegistrationFormData } from '@/lib/validation';
 
-// Helper function to convert File to base64
+// Helper function to convert File to base64 - More robust server-side approach
 async function fileToBase64(file: File): Promise<string> {
   console.log('fileToBase64 called with file:', {
     name: file.name,
@@ -9,19 +9,23 @@ async function fileToBase64(file: File): Promise<string> {
     type: file.type
   });
 
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      console.log('FileReader onload - result type:', typeof result, 'length:', result?.length);
-      resolve(result);
-    };
-    reader.onerror = (error) => {
-      console.error('FileReader error:', error);
-      reject(error);
-    };
-    reader.readAsDataURL(file);
-  });
+  try {
+    // Use arrayBuffer() method which works better in server environment
+    const arrayBuffer = await file.arrayBuffer();
+    console.log('ArrayBuffer created, size:', arrayBuffer.byteLength);
+
+    // Convert ArrayBuffer to base64 using Buffer
+    const buffer = Buffer.from(arrayBuffer);
+    const base64Data = buffer.toString('base64');
+
+    console.log('Base64 conversion successful, length:', base64Data.length);
+    console.log('Base64 sample (first 50 chars):', base64Data.substring(0, 50));
+
+    return base64Data;
+  } catch (error) {
+    console.error('File to base64 conversion error:', error);
+    throw new Error(`Failed to convert file to base64: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
 }
 
 // Helper function to add image to PDF
@@ -32,6 +36,17 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
     console.log(`Converting ${title} to base64...`);
     const base64Data = await fileToBase64(file);
     console.log(`Base64 conversion successful for ${title}, length:`, base64Data.length);
+
+    // Ensure base64 data is properly formatted for jsPDF
+    // jsPDF expects pure base64 data without data URL prefix
+    let cleanBase64Data = base64Data;
+    if (base64Data.includes(',')) {
+      // Remove data URL prefix if present (e.g., "data:image/jpeg;base64,")
+      cleanBase64Data = base64Data.split(',')[1];
+      console.log('Removed data URL prefix, new length:', cleanBase64Data.length);
+    }
+
+    console.log('Clean base64 sample (first 50 chars):', cleanBase64Data.substring(0, 50));
 
     const pageWidth = doc.internal.pageSize.width;
     const maxWidth = pageWidth - (margin * 2);
@@ -56,21 +71,21 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
       }
 
       // Try to add the image with proper dimensions
-      console.log(`Attempting to add image with format: ${format}, base64 length: ${base64Data.length}`);
+      console.log(`Attempting to add image with format: ${format}, base64 length: ${cleanBase64Data.length}`);
       try {
-        doc.addImage(base64Data, format, margin, yPos, maxWidth, maxHeight);
+        doc.addImage(cleanBase64Data, format, margin, yPos, maxWidth, maxHeight);
         console.log(`Successfully added image as ${format}`);
         yPos += maxHeight + 10;
       } catch (formatError) {
         // If the specific format fails, try JPEG as fallback
         console.warn(`Failed to add image as ${format}, trying JPEG:`, formatError);
         try {
-          doc.addImage(base64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
+          doc.addImage(cleanBase64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
           console.log('Successfully added image as JPEG fallback');
           yPos += maxHeight + 10;
         } catch (jpegError) {
           console.error('Failed to add image as JPEG:', jpegError);
-          console.error('Base64 data sample:', base64Data.substring(0, 100));
+          console.error('Clean base64 data sample:', cleanBase64Data.substring(0, 100));
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
           doc.text('(Image could not be displayed in PDF)', margin, yPos);
