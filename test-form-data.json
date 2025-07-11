@@ -2,7 +2,7 @@
   "patient": {
     "firstName": "Test",
     "lastName": "Patient",
-    "dateOfBirth": "2010-01-01",
+    "dateOfBirth": "01-01-2010",
     "gender": "male",
     "address": "123 Test St",
     "city": "Test City",
@@ -26,7 +26,7 @@
     "policyNumber": "TEST123",
     "groupNumber": "GROUP123",
     "subscriberName": "Test Parent",
-    "subscriberDateOfBirth": "1980-01-01",
+    "subscriberDateOfBirth": "01-01-1980",
     "relationshipToPatient": "parent"
   },
   "guarantor": {

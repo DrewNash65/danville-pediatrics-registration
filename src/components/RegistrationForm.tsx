@@ -300,10 +300,10 @@ export function RegistrationForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6">
         {/* Header with Logo */}
-        <div className="text-center mb-8">
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-4 sm:mb-6">
             <Image
               src="/Danville Pediatrics Logo.png"
               alt="Danville Pediatrics Logo"
@@ -331,13 +331,13 @@ export function RegistrationForm() {
         steps={FORM_STEPS.map(step => step.title)}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
-          <div className="bg-white shadow-lg rounded-lg p-6 mb-6 border-t-4 border-blue-500">
-            <h2 className="text-xl font-semibold text-blue-800 mb-4 flex items-center">
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mr-3">
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 sm:mt-8">
+          <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 border-t-4 border-blue-500">
+            <h2 className="text-lg sm:text-xl font-semibold text-blue-800 mb-4 flex flex-col sm:flex-row sm:items-center">
+              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-2 sm:mb-0 sm:mr-3 self-start">
                 Step {currentStep + 1}
               </span>
-              {FORM_STEPS[currentStep].title}
+              <span className="text-base sm:text-xl">{FORM_STEPS[currentStep].title}</span>
             </h2>
 
             <CurrentStepComponent form={form} />
@@ -354,12 +354,12 @@ export function RegistrationForm() {
             </div>
           )}
 
-          <div className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center bg-gray-50 p-4 rounded-lg gap-3 sm:gap-0">
             <button
               type="button"
               onClick={prevStep}
               disabled={currentStep === 0}
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition-colors font-medium flex items-center"
+              className="px-4 sm:px-6 py-3 bg-gray-200 text-gray-700 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition-colors font-medium flex items-center justify-center btn-primary"
             >
               <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -371,7 +371,7 @@ export function RegistrationForm() {
               <button
                 type="submit"
                 disabled={isSubmitting || !isValid}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center shadow-lg"
+                className="px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center justify-center shadow-lg btn-primary"
               >
                 {isSubmitting ? (
                   <>
@@ -391,7 +391,7 @@ export function RegistrationForm() {
               <button
                 type="button"
                 onClick={nextStep}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center shadow-lg"
+                className="px-4 sm:px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center justify-center shadow-lg btn-primary"
               >
                 Next
                 <svg className="h-4 w-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

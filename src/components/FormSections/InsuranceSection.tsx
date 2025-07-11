@@ -6,6 +6,7 @@ import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
 import { SelectField } from '../SelectField';
 import { FileUpload } from '../FileUpload';
+import { formatDateInput, isValidDate } from '@/lib/date-utils';
 
 interface InsuranceSectionProps {
   form: UseFormReturn<RegistrationFormData>;
@@ -33,7 +34,7 @@ const RELATIONSHIP_OPTIONS = [
 ];
 
 export function InsuranceSection({ form }: InsuranceSectionProps) {
-  const { register, formState: { errors }, setValue, watch } = form;
+  const { register, formState: { errors }, setValue, watch, setError, clearErrors } = form;
   const [hasSecondaryInsurance, setHasSecondaryInsurance] = useState(false);
   const [isProcessingAI, setIsProcessingAI] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -505,11 +506,29 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
               label="Subscriber Date of Birth"
               required
               error={errors.primaryInsurance?.subscriberDateOfBirth?.message}
+              helpText="Format: MM-DD-YYYY (e.g., 01-15-1985)"
             >
               <input
-                type="date"
+                type="text"
                 {...register('primaryInsurance.subscriberDateOfBirth')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
+                placeholder="MM-DD-YYYY"
+                maxLength={10}
+                onChange={(e) => {
+                  const formatted = formatDateInput(e.target.value);
+                  e.target.value = formatted;
+                  // Trigger validation
+                  if (formatted.length === 10) {
+                    if (!isValidDate(formatted)) {
+                      setError('primaryInsurance.subscriberDateOfBirth', {
+                        type: 'manual',
+                        message: 'Please enter a valid date'
+                      });
+                    } else {
+                      clearErrors('primaryInsurance.subscriberDateOfBirth');
+                    }
+                  }
+                }}
               />
             </FormField>
           </div>
@@ -600,11 +619,29 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                 <FormField
                   label="Subscriber Date of Birth"
                   error={errors.secondaryInsurance?.subscriberDateOfBirth?.message}
+                  helpText="Format: MM-DD-YYYY (e.g., 01-15-1985)"
                 >
                   <input
-                    type="date"
+                    type="text"
                     {...register('secondaryInsurance.subscriberDateOfBirth')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
+                    placeholder="MM-DD-YYYY"
+                    maxLength={10}
+                    onChange={(e) => {
+                      const formatted = formatDateInput(e.target.value);
+                      e.target.value = formatted;
+                      // Trigger validation
+                      if (formatted.length === 10) {
+                        if (!isValidDate(formatted)) {
+                          setError('secondaryInsurance.subscriberDateOfBirth', {
+                            type: 'manual',
+                            message: 'Please enter a valid date'
+                          });
+                        } else {
+                          clearErrors('secondaryInsurance.subscriberDateOfBirth');
+                        }
+                      }
+                    }}
                   />
                 </FormField>
               </div>

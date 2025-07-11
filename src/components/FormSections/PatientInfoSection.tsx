@@ -5,6 +5,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
 import { SelectField } from '../SelectField';
+import { formatDateInput, isValidDate } from '@/lib/date-utils';
 
 interface PatientInfoSectionProps {
   form: UseFormReturn<RegistrationFormData>;
@@ -71,7 +72,7 @@ const GENDER_OPTIONS = [
 ];
 
 export function PatientInfoSection({ form }: PatientInfoSectionProps) {
-  const { register, formState: { errors }, setValue } = form;
+  const { register, formState: { errors }, setValue, setError, clearErrors } = form;
 
   const formatPhoneNumber = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -168,11 +169,29 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           label="Date of Birth"
           required
           error={errors.patient?.dateOfBirth?.message}
+          helpText="Format: MM-DD-YYYY (e.g., 12-25-2010)"
         >
           <input
-            type="date"
+            type="text"
             {...register('patient.dateOfBirth')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
+            placeholder="MM-DD-YYYY"
+            maxLength={10}
+            onChange={(e) => {
+              const formatted = formatDateInput(e.target.value);
+              e.target.value = formatted;
+              // Trigger validation
+              if (formatted.length === 10) {
+                if (!isValidDate(formatted)) {
+                  setError('patient.dateOfBirth', {
+                    type: 'manual',
+                    message: 'Please enter a valid date'
+                  });
+                } else {
+                  clearErrors('patient.dateOfBirth');
+                }
+              }
+            }}
           />
         </FormField>
 

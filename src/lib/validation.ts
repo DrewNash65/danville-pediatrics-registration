@@ -19,8 +19,8 @@ const requiredPhoneSchema = z.string()
 const emailSchema = z.string().trim().email('Invalid email address').optional();
 const requiredEmailSchema = z.string().trim().email('Invalid email address');
 
-// Date validation
-const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format');
+// Date validation - MM-DD-YYYY format
+const dateSchema = z.string().regex(/^\d{2}-\d{2}-\d{4}$/, 'Date must be in MM-DD-YYYY format');
 
 // SSN validation (optional)
 const ssnSchema = z.string()
