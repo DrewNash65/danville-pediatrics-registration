@@ -215,6 +215,16 @@ export function RegistrationForm() {
         if (responseData.filesProcessed) {
           console.log('Server files processed:', responseData.filesProcessed);
         }
+
+        // Check PDF generation status
+        if (responseData.pdfGenerationStatus) {
+          console.log('🔧 PDF Generation Status:', responseData.pdfGenerationStatus);
+        }
+
+        // Check for PDF errors
+        if (responseData.pdfError) {
+          console.error('🚨 PDF Generation Error:', responseData.pdfError);
+        }
       } catch (e) {
         console.log('Response is not JSON:', responseText);
       }

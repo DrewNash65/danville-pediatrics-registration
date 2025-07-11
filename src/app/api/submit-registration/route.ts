@@ -119,14 +119,23 @@ export async function POST(request: NextRequest) {
 
     // Generate PDF from form data
     let pdfBuffer: Buffer;
+    let pdfGenerationStatus = 'not_started';
     try {
+      console.log('🔧 About to call generatePDF function...');
+      pdfGenerationStatus = 'starting';
       pdfBuffer = await generatePDF(completeFormData);
+      pdfGenerationStatus = 'completed';
+      console.log('✅ PDF generation completed successfully');
     } catch (pdfError) {
+      pdfGenerationStatus = 'failed';
       console.error('PDF generation error:', pdfError);
+      console.error('PDF error stack:', pdfError instanceof Error ? pdfError.stack : 'Unknown error');
       return NextResponse.json(
-        { 
-          success: false, 
-          message: 'Failed to generate PDF document' 
+        {
+          success: false,
+          message: 'Failed to generate PDF document',
+          pdfGenerationStatus,
+          pdfError: pdfError instanceof Error ? pdfError.message : 'Unknown error'
         },
         { status: 500 }
       );
@@ -208,7 +217,9 @@ export async function POST(request: NextRequest) {
         primaryBack: !!bodyWithFiles.primaryInsurance.cardBackImage,
         secondaryFront: !!bodyWithFiles.secondaryInsurance?.cardFrontImage,
         secondaryBack: !!bodyWithFiles.secondaryInsurance?.cardBackImage,
-      }
+      },
+      // PDF generation status for debugging
+      pdfGenerationStatus
     });
 
   } catch (error) {
