@@ -31,6 +31,13 @@ body {
     @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors hover:border-blue-400 shadow-sm;
     min-height: 44px; /* Ensure minimum touch target size for mobile */
     font-size: 16px; /* Prevent zoom on iOS */
+    color: #1f2937; /* Dark gray text for better visibility */
+    background-color: #ffffff; /* Ensure white background */
+  }
+
+  .form-input::placeholder {
+    color: #6b7280; /* Medium gray for placeholders */
+    opacity: 1; /* Ensure full opacity */
   }
 
   .form-input-error {
@@ -67,6 +74,8 @@ body {
   .form-input {
     @apply px-3 py-4 text-base;
     min-height: 48px; /* Larger touch targets on mobile */
+    color: #111827 !important; /* Very dark text for mobile visibility */
+    background-color: #ffffff !important; /* Ensure white background */
   }
 
   .btn-primary,
@@ -97,5 +106,17 @@ body {
   .camera-button {
     @apply w-full py-4 text-base;
     min-height: 48px;
+  }
+
+  /* Ensure all input and select elements have dark text */
+  input, select, textarea {
+    color: #111827 !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Ensure placeholder text is visible but lighter */
+  input::placeholder, textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1 !important;
   }
 }

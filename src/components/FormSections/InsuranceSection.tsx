@@ -6,7 +6,8 @@ import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
 import { SelectField } from '../SelectField';
 import { FileUpload } from '../FileUpload';
-import { formatDateInput, isValidDate } from '@/lib/date-utils';
+import { DateInput } from '../DateInput';
+import { isValidDate } from '@/lib/date-utils';
 
 interface InsuranceSectionProps {
   form: UseFormReturn<RegistrationFormData>;
@@ -506,20 +507,15 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
               label="Subscriber Date of Birth"
               required
               error={errors.primaryInsurance?.subscriberDateOfBirth?.message}
-              helpText="Format: MM-DD-YYYY (e.g., 01-15-1985)"
+              helpText="Type MM-DD-YYYY or click calendar icon"
             >
-              <input
-                type="text"
-                {...register('primaryInsurance.subscriberDateOfBirth')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
-                placeholder="MM-DD-YYYY"
-                maxLength={10}
-                onChange={(e) => {
-                  const formatted = formatDateInput(e.target.value);
-                  e.target.value = formatted;
+              <DateInput
+                value={watch('primaryInsurance.subscriberDateOfBirth') || ''}
+                onChange={(value) => {
+                  setValue('primaryInsurance.subscriberDateOfBirth', value);
                   // Trigger validation
-                  if (formatted.length === 10) {
-                    if (!isValidDate(formatted)) {
+                  if (value.length === 10) {
+                    if (!isValidDate(value)) {
                       setError('primaryInsurance.subscriberDateOfBirth', {
                         type: 'manual',
                         message: 'Please enter a valid date'
@@ -529,6 +525,8 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                     }
                   }
                 }}
+                placeholder="MM-DD-YYYY"
+                required
               />
             </FormField>
           </div>
@@ -619,20 +617,15 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                 <FormField
                   label="Subscriber Date of Birth"
                   error={errors.secondaryInsurance?.subscriberDateOfBirth?.message}
-                  helpText="Format: MM-DD-YYYY (e.g., 01-15-1985)"
+                  helpText="Type MM-DD-YYYY or click calendar icon"
                 >
-                  <input
-                    type="text"
-                    {...register('secondaryInsurance.subscriberDateOfBirth')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
-                    placeholder="MM-DD-YYYY"
-                    maxLength={10}
-                    onChange={(e) => {
-                      const formatted = formatDateInput(e.target.value);
-                      e.target.value = formatted;
+                  <DateInput
+                    value={watch('secondaryInsurance.subscriberDateOfBirth') || ''}
+                    onChange={(value) => {
+                      setValue('secondaryInsurance.subscriberDateOfBirth', value);
                       // Trigger validation
-                      if (formatted.length === 10) {
-                        if (!isValidDate(formatted)) {
+                      if (value.length === 10) {
+                        if (!isValidDate(value)) {
                           setError('secondaryInsurance.subscriberDateOfBirth', {
                             type: 'manual',
                             message: 'Please enter a valid date'
@@ -642,6 +635,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                         }
                       }
                     }}
+                    placeholder="MM-DD-YYYY"
                   />
                 </FormField>
               </div>

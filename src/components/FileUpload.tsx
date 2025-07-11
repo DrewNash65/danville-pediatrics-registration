@@ -267,7 +267,8 @@ export function FileUpload({
                 <img
                   src={imagePreview}
                   alt="Preview"
-                  className="mx-auto max-w-full max-h-48 rounded-lg shadow-md border border-gray-200"
+                  className="mx-auto max-w-full max-h-48 rounded-lg shadow-md border border-gray-200 object-contain"
+                  style={{ aspectRatio: 'auto', width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '12rem' }}
                 />
                 <div className="absolute top-2 right-2">
                   <div className="bg-green-500 text-white rounded-full p-1">

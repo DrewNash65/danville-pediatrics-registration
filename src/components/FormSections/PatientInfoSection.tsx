@@ -5,7 +5,8 @@ import { UseFormReturn } from 'react-hook-form';
 import { RegistrationFormData } from '@/lib/validation';
 import { FormField } from '../FormField';
 import { SelectField } from '../SelectField';
-import { formatDateInput, isValidDate } from '@/lib/date-utils';
+import { DateInput } from '../DateInput';
+import { isValidDate } from '@/lib/date-utils';
 
 interface PatientInfoSectionProps {
   form: UseFormReturn<RegistrationFormData>;
@@ -72,7 +73,7 @@ const GENDER_OPTIONS = [
 ];
 
 export function PatientInfoSection({ form }: PatientInfoSectionProps) {
-  const { register, formState: { errors }, setValue, setError, clearErrors } = form;
+  const { register, formState: { errors }, setValue, setError, clearErrors, watch } = form;
 
   const formatPhoneNumber = (value: string) => {
     const numbers = value.replace(/\D/g, '');
@@ -169,20 +170,15 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           label="Date of Birth"
           required
           error={errors.patient?.dateOfBirth?.message}
-          helpText="Format: MM-DD-YYYY (e.g., 12-25-2010)"
+          helpText="Type MM-DD-YYYY or click calendar icon"
         >
-          <input
-            type="text"
-            {...register('patient.dateOfBirth')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 form-input"
-            placeholder="MM-DD-YYYY"
-            maxLength={10}
-            onChange={(e) => {
-              const formatted = formatDateInput(e.target.value);
-              e.target.value = formatted;
+          <DateInput
+            value={form.watch('patient.dateOfBirth') || ''}
+            onChange={(value) => {
+              setValue('patient.dateOfBirth', value);
               // Trigger validation
-              if (formatted.length === 10) {
-                if (!isValidDate(formatted)) {
+              if (value.length === 10) {
+                if (!isValidDate(value)) {
                   setError('patient.dateOfBirth', {
                     type: 'manual',
                     message: 'Please enter a valid date'
@@ -192,6 +188,8 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
                 }
               }
             }}
+            placeholder="MM-DD-YYYY"
+            required
           />
         </FormField>
 
