@@ -130,6 +130,26 @@ export const emergencyContactSchema = z.object({
 
 
 
+// Consent signatory schema
+export const consentSignatorySchema = z.object({
+  signatoryName: z.string().min(1, 'Signatory name is required'),
+  signatoryDateOfBirth: dateSchema.refine((date) => {
+    if (!date) return false;
+    const [month, day, year] = date.split('-').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      return age - 1 >= 18;
+    }
+    return age >= 18;
+  }, 'Signatory must be at least 18 years old'),
+  electronicSignature: z.string().min(1, 'Electronic signature is required'),
+  dateSigned: z.string().min(1, 'Date signed is required'),
+});
+
 // Main registration form schema
 export const registrationFormSchema = z.object({
   patient: patientInfoSchema,
@@ -149,6 +169,7 @@ export const registrationFormSchema = z.object({
   financialPolicyAgreement: z.boolean().refine(val => val === true, {
     message: 'Financial policy agreement is required',
   }),
+  consentSignatory: consentSignatorySchema,
 });
 
 export type RegistrationFormData = z.infer<typeof registrationFormSchema>;

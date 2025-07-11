@@ -48,5 +48,11 @@
   },
   "consentToTreatment": true,
   "hipaaAcknowledgment": true,
-  "financialPolicyAgreement": true
+  "financialPolicyAgreement": true,
+  "consentSignatory": {
+    "signatoryName": "John Parent Smith",
+    "signatoryDateOfBirth": "01-15-1985",
+    "electronicSignature": "John Parent Smith",
+    "dateSigned": "12-15-2024"
+  }
 }

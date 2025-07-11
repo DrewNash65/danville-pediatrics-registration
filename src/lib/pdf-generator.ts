@@ -379,6 +379,13 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText(`HIPAA Acknowledgment: ${formData.hipaaAcknowledgment ? 'ACKNOWLEDGED' : 'NOT ACKNOWLEDGED'}`);
   addText(`Financial Policy Agreement: ${formData.financialPolicyAgreement ? 'AGREED' : 'NOT AGREED'}`);
 
+  // Electronic Signature
+  addSection('ELECTRONIC SIGNATURE');
+  addText(`Signatory Name: ${formData.consentSignatory.signatoryName}`);
+  addText(`Signatory Date of Birth: ${formData.consentSignatory.signatoryDateOfBirth}`);
+  addText(`Electronic Signature: ${formData.consentSignatory.electronicSignature}`);
+  addText(`Date Signed: ${formData.consentSignatory.dateSigned}`);
+
   // Footer
   yPosition += 10;
   addText('This form was submitted electronically and is HIPAA compliant.', margin, 8);

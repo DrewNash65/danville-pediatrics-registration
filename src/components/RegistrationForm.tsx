@@ -10,6 +10,7 @@ import { InsuranceSection } from './FormSections/InsuranceSection';
 import { GuarantorSection } from './FormSections/GuarantorSection';
 import { EmergencyContactSection } from './FormSections/EmergencyContactSection';
 import { ConsentSection } from './FormSections/ConsentSection';
+import { ConsentSignatorySection } from './FormSections/ConsentSignatorySection';
 import { ProgressIndicator } from './ProgressIndicator';
 import { LoadingSpinner } from './LoadingSpinner';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ const FORM_STEPS = [
   { id: 'guarantor', title: 'Guarantor Information', component: GuarantorSection },
   { id: 'emergency', title: 'Emergency Contacts', component: EmergencyContactSection },
   { id: 'consent', title: 'Consent & Agreements', component: ConsentSection },
+  { id: 'signatory', title: 'Electronic Signature', component: ConsentSignatorySection },
 ];
 
 export function RegistrationForm() {
@@ -88,6 +90,12 @@ export function RegistrationForm() {
       consentToTreatment: false,
       hipaaAcknowledgment: false,
       financialPolicyAgreement: false,
+      consentSignatory: {
+        signatoryName: '',
+        signatoryDateOfBirth: '',
+        electronicSignature: '',
+        dateSigned: '',
+      },
     },
   });
 
@@ -116,6 +124,9 @@ export function RegistrationForm() {
         break;
       case 'consent':
         fieldsToValidate = ['consentToTreatment', 'hipaaAcknowledgment', 'financialPolicyAgreement'];
+        break;
+      case 'signatory':
+        fieldsToValidate = ['consentSignatory'];
         break;
     }
 
