@@ -49,8 +49,8 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
     console.log('Clean base64 sample (first 50 chars):', cleanBase64Data.substring(0, 50));
 
     const pageWidth = doc.internal.pageSize.width;
-    const maxWidth = pageWidth - (margin * 2);
-    const maxHeight = 100; // Maximum height for insurance card images
+    const maxWidth = (pageWidth - (margin * 2)) * 0.5; // Reduced by 50%
+    const maxHeight = 50; // Reduced by 50% (was 100)
 
     // Add title
     doc.setFontSize(12);
