@@ -49,29 +49,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Reconstruct the complete form data with files
-    const bodyWithFiles = {
-      ...body,
-      primaryInsurance: {
-        ...body.primaryInsurance,
-        cardFrontImage: primaryCardFront,
-        cardBackImage: primaryCardBack,
-      },
-      secondaryInsurance: body.secondaryInsurance ? {
-        ...body.secondaryInsurance,
-        cardFrontImage: secondaryCardFront,
-        cardBackImage: secondaryCardBack,
-      } : undefined,
-    };
+    // Validate the form data WITHOUT files first (Zod might strip File objects)
+    const validationResult = registrationFormSchema.safeParse(body);
 
-    // Validate the form data
-    const validationResult = registrationFormSchema.safeParse(bodyWithFiles);
-    
     if (!validationResult.success) {
       console.error('Validation errors:', validationResult.error.errors);
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           message: 'Invalid form data',
           errors: validationResult.error.errors.map(err => `${err.path.join('.')}: ${err.message}`)
         },
@@ -81,13 +66,35 @@ export async function POST(request: NextRequest) {
 
     const validatedFormData = validationResult.data;
 
+    // Add files AFTER validation to preserve File objects (convert null to undefined for type compatibility)
+    const bodyWithFiles = {
+      ...validatedFormData,
+      primaryInsurance: {
+        ...validatedFormData.primaryInsurance,
+        cardFrontImage: primaryCardFront || undefined,
+        cardBackImage: primaryCardBack || undefined,
+      },
+      secondaryInsurance: validatedFormData.secondaryInsurance ? {
+        ...validatedFormData.secondaryInsurance,
+        cardFrontImage: secondaryCardFront || undefined,
+        cardBackImage: secondaryCardBack || undefined,
+      } : undefined,
+    };
+
+    console.log('Files added to validated data:', {
+      primaryFront: !!bodyWithFiles.primaryInsurance.cardFrontImage,
+      primaryBack: !!bodyWithFiles.primaryInsurance.cardBackImage,
+      secondaryFront: !!bodyWithFiles.secondaryInsurance?.cardFrontImage,
+      secondaryBack: !!bodyWithFiles.secondaryInsurance?.cardBackImage
+    });
+
     // Generate submission ID and timestamp
     const submissionId = generateSubmissionId();
     const submissionTimestamp = new Date().toISOString();
 
-    // Add metadata to form data
+    // Add metadata to form data (with files preserved)
     const completeFormData = {
-      ...validatedFormData,
+      ...bodyWithFiles,
       submissionId,
       submissionTimestamp,
     };
