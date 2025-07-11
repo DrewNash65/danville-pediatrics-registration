@@ -182,10 +182,24 @@ export function RegistrationForm() {
         formData.append('secondaryInsuranceCardBack', data.secondaryInsurance.cardBackImage);
       }
 
+      // Debug: Check what's actually in the FormData
+      console.log('FormData contents:');
+      for (const [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+        } else {
+          console.log(`${key}: ${typeof value}`);
+        }
+      }
+
+      console.log('About to submit FormData to API...');
+
       const response = await fetch('/api/submit-registration', {
         method: 'POST',
         body: formData, // Use FormData instead of JSON
       });
+
+      console.log('API response status:', response.status);
 
       const result = await response.json();
 

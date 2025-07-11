@@ -189,6 +189,17 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
     backImage: !!formData.primaryInsurance.cardBackImage
   });
 
+  // Debug: Check the actual type and properties of the image objects
+  if (formData.primaryInsurance.cardFrontImage) {
+    console.log('Primary front image type:', typeof formData.primaryInsurance.cardFrontImage);
+    console.log('Primary front image instanceof File:', formData.primaryInsurance.cardFrontImage instanceof File);
+    console.log('Primary front image properties:', {
+      name: formData.primaryInsurance.cardFrontImage.name || 'no name',
+      size: formData.primaryInsurance.cardFrontImage.size || 'no size',
+      type: formData.primaryInsurance.cardFrontImage.type || 'no type'
+    });
+  }
+
   if (formData.primaryInsurance.cardFrontImage) {
     console.log('Adding primary front image to PDF');
     yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
