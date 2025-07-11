@@ -325,6 +325,74 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
 
   return (
     <div className="space-y-8">
+      {/* Photo Upload Instructions */}
+      <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg p-6">
+        <div className="flex items-start space-x-4">
+          <div className="flex-shrink-0">
+            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-blue-900 mb-2">
+              📸 Start Here: Upload Insurance Card Photos
+            </h3>
+            <p className="text-gray-700 mb-4">
+              For the fastest and most accurate completion, photograph both sides of your insurance cards below.
+              Our AI will automatically extract the information and fill in the form fields for you.
+            </p>
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="flex items-center space-x-2 text-sm text-blue-800">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span className="font-medium">💡 Pro Tip:</span>
+                <span>Take clear, well-lit photos with all text visible. You can always edit the information manually after upload.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Primary Insurance Card Photo Upload Section */}
+      <div className="bg-white border-2 border-blue-200 rounded-lg p-6">
+        <div className="flex items-center mb-4">
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white font-bold text-sm">1</span>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">Primary Insurance Card Photos</h3>
+        </div>
+        <p className="text-gray-600 mb-4 text-sm">
+          📱 Use your phone camera to photograph both sides of your primary insurance card.
+          The information will be automatically extracted and filled in the form below.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <FileUpload
+              label="📸 Front of Primary Insurance Card"
+              accept="image/*"
+              onFileSelect={(file) => handleFileUploadWithAI('primaryInsurance.cardFrontImage', file, true)}
+              helpText="🤖 AI auto-fill enabled - Upload to extract member info"
+              enableCamera={true}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <FileUpload
+              label="📸 Back of Primary Insurance Card"
+              accept="image/*"
+              onFileSelect={(file) => handleFileUpload('primaryInsurance.cardBackImage', file)}
+              helpText="📄 Will be included in PDF submission"
+              enableCamera={true}
+            />
+          </div>
+        </div>
+      </div>
+
       {/* AI Processing Status */}
       {(isProcessingAI || aiError || aiSuccess) && (
         <div className="border border-gray-200 rounded-lg p-4">
@@ -455,41 +523,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
           />
         </div>
 
-        <div className="border-t pt-4 mt-6">
-          <h4 className="text-md font-medium text-gray-800 mb-4">Insurance Card Photos</h4>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-            <div className="flex items-start space-x-3">
-              <svg className="h-5 w-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <div>
-                <p className="text-sm font-medium text-blue-800">AI Auto-Fill Available!</p>
-                <p className="text-sm text-blue-700">
-                  Upload the front of your insurance card and we'll automatically extract and fill in your insurance information using AI.
-                  You can review and edit any fields afterward.
-                </p>
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FileUpload
-              label="Front of Insurance Card"
-              accept="image/*"
-              onFileSelect={(file) => handleFileUploadWithAI('primaryInsurance.cardFrontImage', file, true)}
-              helpText="📸 Auto-fill enabled! Upload to extract info with AI"
-              enableCamera={true}
-            />
-
-            <FileUpload
-              label="Back of Insurance Card"
-              accept="image/*"
-              onFileSelect={(file) => handleFileUpload('primaryInsurance.cardBackImage', file)}
-              helpText="Take a photo with your camera or upload from gallery"
-              enableCamera={true}
-            />
-          </div>
-        </div>
       </div>
 
       {/* Secondary Insurance (Optional) */}
