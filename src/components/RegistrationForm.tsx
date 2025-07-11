@@ -210,6 +210,11 @@ export function RegistrationForm() {
       try {
         responseData = JSON.parse(responseText);
         console.log('Parsed response data:', responseData);
+
+        // Check if server processed files
+        if (responseData.filesProcessed) {
+          console.log('Server files processed:', responseData.filesProcessed);
+        }
       } catch (e) {
         console.log('Response is not JSON:', responseText);
       }

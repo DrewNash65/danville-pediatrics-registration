@@ -202,6 +202,13 @@ export async function POST(request: NextRequest) {
       submissionId,
       message,
       emailConfigured: hasValidApiKey,
+      // Debug info about files processed
+      filesProcessed: {
+        primaryFront: !!bodyWithFiles.primaryInsurance.cardFrontImage,
+        primaryBack: !!bodyWithFiles.primaryInsurance.cardBackImage,
+        secondaryFront: !!bodyWithFiles.secondaryInsurance?.cardFrontImage,
+        secondaryBack: !!bodyWithFiles.secondaryInsurance?.cardBackImage,
+      }
     });
 
   } catch (error) {
