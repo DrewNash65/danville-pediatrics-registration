@@ -97,7 +97,17 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
 }
 
 export async function generatePDF(formData: RegistrationFormData & { submissionId?: string; submissionTimestamp?: string }): Promise<Buffer> {
+  console.log('🔧 PDF Generation Started');
+  console.log('📄 Form data received:', {
+    hasPatient: !!formData.patient,
+    hasPrimaryInsurance: !!formData.primaryInsurance,
+    hasSecondaryInsurance: !!formData.secondaryInsurance,
+    primaryFrontImage: !!formData.primaryInsurance?.cardFrontImage,
+    primaryBackImage: !!formData.primaryInsurance?.cardBackImage
+  });
+
   const doc = new jsPDF();
+  console.log('📄 jsPDF instance created successfully');
   let yPosition = 20;
   const pageHeight = doc.internal.pageSize.height;
   const margin = 20;
@@ -202,6 +212,12 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
 
   // Add insurance card images if available
   console.log('Checking for primary insurance images:', {
+    frontImage: !!formData.primaryInsurance.cardFrontImage,
+    backImage: !!formData.primaryInsurance.cardBackImage
+  });
+
+  console.log('🖼️ Reached image processing section');
+  console.log('📊 Checking for primary insurance images:', {
     frontImage: !!formData.primaryInsurance.cardFrontImage,
     backImage: !!formData.primaryInsurance.cardBackImage
   });
@@ -341,6 +357,8 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
   addText('For questions, please contact Danville Pediatrics at (925) 362-1861.', margin, 8);
 
   // Convert to buffer
+  console.log('📄 Converting PDF to buffer...');
   const pdfOutput = doc.output('arraybuffer');
+  console.log('✅ PDF generation completed successfully');
   return Buffer.from(pdfOutput);
 }
