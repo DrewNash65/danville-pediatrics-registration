@@ -56,17 +56,21 @@ async function addImageToPDF(doc: jsPDF, file: File, title: string, yPos: number
       }
 
       // Try to add the image with proper dimensions
+      console.log(`Attempting to add image with format: ${format}, base64 length: ${base64Data.length}`);
       try {
         doc.addImage(base64Data, format, margin, yPos, maxWidth, maxHeight);
+        console.log(`Successfully added image as ${format}`);
         yPos += maxHeight + 10;
       } catch (formatError) {
         // If the specific format fails, try JPEG as fallback
         console.warn(`Failed to add image as ${format}, trying JPEG:`, formatError);
         try {
           doc.addImage(base64Data, 'JPEG', margin, yPos, maxWidth, maxHeight);
+          console.log('Successfully added image as JPEG fallback');
           yPos += maxHeight + 10;
         } catch (jpegError) {
-          console.warn('Failed to add image as JPEG:', jpegError);
+          console.error('Failed to add image as JPEG:', jpegError);
+          console.error('Base64 data sample:', base64Data.substring(0, 100));
           doc.setFontSize(10);
           doc.setFont('helvetica', 'normal');
           doc.text('(Image could not be displayed in PDF)', margin, yPos);
@@ -215,11 +219,21 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
 
   if (formData.primaryInsurance.cardFrontImage) {
     console.log('Adding primary front image to PDF');
-    yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
+    try {
+      yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
+      console.log('Successfully added primary front image to PDF');
+    } catch (error) {
+      console.error('Failed to add primary front image:', error);
+    }
   }
   if (formData.primaryInsurance.cardBackImage) {
     console.log('Adding primary back image to PDF');
-    yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardBackImage, 'Primary Insurance Card - Back', yPosition + 5);
+    try {
+      yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardBackImage, 'Primary Insurance Card - Back', yPosition + 5);
+      console.log('Successfully added primary back image to PDF');
+    } catch (error) {
+      console.error('Failed to add primary back image:', error);
+    }
   }
 
   // Secondary Insurance (if provided)
@@ -242,11 +256,21 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
 
     if (formData.secondaryInsurance.cardFrontImage) {
       console.log('Adding secondary front image to PDF');
-      yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardFrontImage, 'Secondary Insurance Card - Front', yPosition + 5);
+      try {
+        yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardFrontImage, 'Secondary Insurance Card - Front', yPosition + 5);
+        console.log('Successfully added secondary front image to PDF');
+      } catch (error) {
+        console.error('Failed to add secondary front image:', error);
+      }
     }
     if (formData.secondaryInsurance.cardBackImage) {
       console.log('Adding secondary back image to PDF');
-      yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardBackImage, 'Secondary Insurance Card - Back', yPosition + 5);
+      try {
+        yPosition = await addImageToPDF(doc, formData.secondaryInsurance.cardBackImage, 'Secondary Insurance Card - Back', yPosition + 5);
+        console.log('Successfully added secondary back image to PDF');
+      } catch (error) {
+        console.error('Failed to add secondary back image:', error);
+      }
     }
   }
 
