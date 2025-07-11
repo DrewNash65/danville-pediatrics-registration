@@ -250,18 +250,31 @@ export async function generatePDF(formData: RegistrationFormData & { submissionI
 
   if (formData.primaryInsurance.cardFrontImage) {
     console.log('Adding primary front image to PDF');
+    console.log('Current yPosition before front image:', yPosition);
     try {
       yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardFrontImage, 'Primary Insurance Card - Front', yPosition + 5);
       console.log('Successfully added primary front image to PDF');
+      console.log('yPosition after front image:', yPosition);
     } catch (error) {
       console.error('Failed to add primary front image:', error);
     }
   }
   if (formData.primaryInsurance.cardBackImage) {
     console.log('Adding primary back image to PDF');
+    console.log('Current yPosition before back image:', yPosition);
+
+    // Check if we need a new page for the back image
+    const pageHeight = doc.internal.pageSize.height;
+    if (yPosition > pageHeight - 80) { // 80px buffer for image + spacing
+      console.log('Adding new page for back image, current yPosition:', yPosition, 'pageHeight:', pageHeight);
+      doc.addPage();
+      yPosition = 20; // Reset to top of new page
+    }
+
     try {
       yPosition = await addImageToPDF(doc, formData.primaryInsurance.cardBackImage, 'Primary Insurance Card - Back', yPosition + 5);
       console.log('Successfully added primary back image to PDF');
+      console.log('yPosition after back image:', yPosition);
     } catch (error) {
       console.error('Failed to add primary back image:', error);
     }
