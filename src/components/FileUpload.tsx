@@ -263,18 +263,27 @@ export function FileUpload({
         {selectedFile ? (
           <div className="space-y-3">
             {imagePreview ? (
-              <div className="relative">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="mx-auto max-w-full max-h-48 rounded-lg shadow-md border border-gray-200 object-contain"
-                  style={{ aspectRatio: 'auto', width: 'auto', height: 'auto', maxWidth: '100%', maxHeight: '12rem' }}
-                />
-                <div className="absolute top-2 right-2">
-                  <div className="bg-green-500 text-white rounded-full p-1">
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+              <div className="relative flex justify-center insurance-card-preview">
+                <div className="relative inline-block max-w-sm">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="rounded-lg shadow-md border border-gray-200"
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '300px',
+                      width: 'auto',
+                      height: 'auto',
+                      objectFit: 'contain',
+                      display: 'block'
+                    }}
+                  />
+                  <div className="absolute top-2 right-2">
+                    <div className="bg-green-500 text-white rounded-full p-1">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>

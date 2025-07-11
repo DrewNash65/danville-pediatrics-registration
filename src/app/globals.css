@@ -119,4 +119,12 @@ body {
     color: #6b7280 !important;
     opacity: 1 !important;
   }
+
+  /* Insurance card image styling to prevent distortion */
+  .insurance-card-preview img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    aspect-ratio: auto !important;
+  }
 }
