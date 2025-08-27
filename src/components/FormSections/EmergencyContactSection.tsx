@@ -136,7 +136,6 @@ export function EmergencyContactSection({ form }: EmergencyContactSectionProps) 
 
         <SelectField
           label="Relationship to Patient"
-          required
           options={RELATIONSHIP_OPTIONS}
           error={errors.emergencyContact1?.relationship?.message}
           {...register('emergencyContact1.relationship')}

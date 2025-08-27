@@ -124,7 +124,6 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <SelectField
             label="Relationship to Patient"
-            required
             options={RELATIONSHIP_OPTIONS}
             error={errors.parentGuardian1?.relationship?.message}
             {...register('parentGuardian1.relationship')}

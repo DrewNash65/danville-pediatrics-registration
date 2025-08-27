@@ -185,7 +185,6 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
 
       <SelectField
         label="Relationship to Patient"
-        required
         options={RELATIONSHIP_OPTIONS}
         error={errors.guarantor?.relationshipToPatient?.message}
         {...register('guarantor.relationshipToPatient')}

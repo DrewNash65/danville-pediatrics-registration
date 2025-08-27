@@ -63,7 +63,7 @@ export const patientInfoSchema = z.object({
 export const parentGuardianSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  relationship: z.string().min(1, 'Relationship is required'),
+  relationship: z.string().optional(),
   phoneNumbers: z.object({
     cell: phoneSchema,
     work: phoneSchema,
@@ -87,7 +87,7 @@ export const insuranceSchema = z.object({
   groupNumber: z.string().optional(),
   subscriberName: z.string().min(1, 'Subscriber name is required'),
   subscriberDateOfBirth: dateSchema,
-  subscriberRelationship: z.string().min(1, 'Subscriber relationship is required'),
+  subscriberRelationship: z.string().optional(),
   cardFrontImage: z.instanceof(File).optional(),
   cardBackImage: z.instanceof(File).optional(),
 });
@@ -96,7 +96,7 @@ export const insuranceSchema = z.object({
 export const guarantorSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  relationshipToPatient: z.string().min(1, 'Relationship to patient is required'),
+  relationshipToPatient: z.string().optional(),
   socialSecurityNumber: ssnSchema,
   address: addressSchema,
   phoneNumber: requiredPhoneSchema,
@@ -112,7 +112,7 @@ export const guarantorSchema = z.object({
 export const emergencyContactSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
-  relationship: z.string().min(1, 'Relationship is required'),
+  relationship: z.string().optional(),
   phoneNumbers: z.object({
     home: phoneSchema,
     cell: phoneSchema,

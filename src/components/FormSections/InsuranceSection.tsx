@@ -533,7 +533,6 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
 
           <SelectField
             label="Subscriber Relationship to Patient"
-            required
             options={RELATIONSHIP_OPTIONS}
             error={errors.primaryInsurance?.subscriberRelationship?.message}
             {...register('primaryInsurance.subscriberRelationship')}
