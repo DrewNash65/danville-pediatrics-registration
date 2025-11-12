@@ -12,6 +12,17 @@
   },
 
   "public": true,
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": {
+        "type": "host",
+        "value": "www.forms.1to1pediatrics.com"
+      },
+      "destination": "https://forms.1to1pediatrics.com/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
