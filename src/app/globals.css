@@ -128,3 +128,58 @@ body {
     aspect-ratio: auto !important;
   }
 }
+
+/* Enhanced validation animations */
+@keyframes fieldErrorPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    border-color: rgb(239, 68, 68);
+  }
+  25% {
+    box-shadow: 0 0 15px 5px rgba(239, 68, 68, 0.5);
+    border-color: rgb(220, 38, 38);
+  }
+  50% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    border-color: rgb(239, 68, 68);
+  }
+  75% {
+    box-shadow: 0 0 15px 5px rgba(239, 68, 68, 0.5);
+    border-color: rgb(220, 38, 38);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    border-color: rgb(239, 68, 68);
+  }
+}
+
+@keyframes fieldErrorFlash {
+  0%, 100% {
+    background-color: rgba(254, 242, 242, 0.3);
+  }
+  50% {
+    background-color: rgba(254, 226, 226, 0.8);
+  }
+}
+
+.field-error-highlight {
+  animation: fieldErrorPulse 1.5s ease-in-out infinite, fieldErrorFlash 1s ease-in-out 3;
+  border-width: 2px !important;
+  border-style: solid !important;
+}
+
+.field-error-highlight input,
+.field-error-highlight select,
+.field-error-highlight textarea {
+  border-color: rgb(239, 68, 68) !important;
+  outline: none !important;
+}
+
+/* Scroll behavior for invalid fields */
+html {
+  scroll-behavior: smooth;
+}
+
+.field-error-container {
+  scroll-margin-top: 100px; /* Account for fixed headers */
+}

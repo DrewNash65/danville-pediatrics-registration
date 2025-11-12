@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registrationFormSchema, type RegistrationFormData } from '@/lib/validation';
+import { findAndScrollToFirstInvalidField, removeAllErrorHighlights } from '@/lib/validation-utils';
 import { PatientInfoSection } from './FormSections/PatientInfoSection';
 import { ParentGuardianSection } from './FormSections/ParentGuardianSection';
 import { InsuranceSection } from './FormSections/InsuranceSection';
@@ -102,6 +103,9 @@ export function RegistrationForm() {
   const { handleSubmit, trigger, formState: { errors, isValid } } = form;
 
   const nextStep = async () => {
+    // Remove any existing error highlights before validation
+    removeAllErrorHighlights();
+
     const currentStepId = FORM_STEPS[currentStep].id;
     let fieldsToValidate: (keyof RegistrationFormData)[] = [];
 
@@ -131,15 +135,41 @@ export function RegistrationForm() {
     }
 
     const isStepValid = await trigger(fieldsToValidate);
-    
+
     if (isStepValid && currentStep < FORM_STEPS.length - 1) {
       setCurrentStep(currentStep + 1);
+    } else if (!isStepValid) {
+      // Find and highlight the first invalid field
+      const foundInvalidField = findAndScrollToFirstInvalidField(errors);
+      if (!foundInvalidField) {
+        // If we couldn't find a specific field, show a general error message
+        console.warn('Could not locate invalid field, but validation failed');
+      }
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const validateAndSubmit = async () => {
+    // Remove any existing error highlights before validation
+    removeAllErrorHighlights();
+
+    // Validate all fields before submission
+    const isFormValid = await trigger();
+
+    if (isFormValid) {
+      // If form is valid, submit it
+      handleSubmit(onSubmit)();
+    } else {
+      // If form is invalid, find and highlight the first error
+      const foundInvalidField = findAndScrollToFirstInvalidField(errors);
+      if (!foundInvalidField) {
+        setSubmitError('Please complete all required fields before submitting.');
+      }
     }
   };
 
@@ -251,6 +281,11 @@ export function RegistrationForm() {
     } catch (error) {
       console.error('Submission error:', error);
       setSubmitError('Network error. Please check your connection and try again.');
+
+      // If there are validation errors, highlight the first one
+      if (Object.keys(errors).length > 0) {
+        findAndScrollToFirstInvalidField(errors);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -342,7 +377,7 @@ export function RegistrationForm() {
         steps={FORM_STEPS.map(step => step.title)}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-6 sm:mt-8">
+      <form className="mt-6 sm:mt-8">
           <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 border-t-4 border-blue-500">
             <h2 className="text-lg sm:text-xl font-semibold text-blue-800 mb-4 flex flex-col sm:flex-row sm:items-center">
               <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium mb-2 sm:mb-0 sm:mr-3 self-start">
@@ -380,8 +415,9 @@ export function RegistrationForm() {
 
             {currentStep === FORM_STEPS.length - 1 ? (
               <button
-                type="submit"
-                disabled={isSubmitting || !isValid}
+                type="button"
+                onClick={validateAndSubmit}
+                disabled={isSubmitting}
                 className="px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center justify-center shadow-lg btn-primary"
               >
                 {isSubmitting ? (
