@@ -510,6 +510,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
               helpText="Type MM-DD-YYYY or click calendar icon"
             >
               <DateInput
+                name="primaryInsurance.subscriberDateOfBirth"
                 value={watch('primaryInsurance.subscriberDateOfBirth') || ''}
                 onChange={(value) => {
                   setValue('primaryInsurance.subscriberDateOfBirth', value);
@@ -550,7 +551,13 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
             <input
               type="checkbox"
               checked={hasSecondaryInsurance}
-              onChange={(e) => setHasSecondaryInsurance(e.target.checked)}
+              onChange={(e) => {
+                setHasSecondaryInsurance(e.target.checked);
+                if (!e.target.checked) {
+                  // Clear partial values when toggling off so hidden fields don't block validation
+                  setValue('secondaryInsurance', undefined as any);
+                }
+              }}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="ml-2 text-sm text-gray-700">I have secondary insurance</span>
@@ -619,6 +626,7 @@ export function InsuranceSection({ form }: InsuranceSectionProps) {
                   helpText="Type MM-DD-YYYY or click calendar icon"
                 >
                   <DateInput
+                    name="secondaryInsurance.subscriberDateOfBirth"
                     value={watch('secondaryInsurance.subscriberDateOfBirth') || ''}
                     onChange={(value) => {
                       setValue('secondaryInsurance.subscriberDateOfBirth', value);

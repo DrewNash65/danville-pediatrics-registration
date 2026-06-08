@@ -305,7 +305,13 @@ export function GuarantorSection({ form }: GuarantorSectionProps) {
             <input
               type="checkbox"
               checked={hasEmployer}
-              onChange={(e) => setHasEmployer(e.target.checked)}
+              onChange={(e) => {
+                setHasEmployer(e.target.checked);
+                if (!e.target.checked) {
+                  // Clear partial values when toggling off so hidden fields don't block validation
+                  setValue('guarantor.employer', undefined as any);
+                }
+              }}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="ml-2 text-sm text-gray-700">Add employer information</span>

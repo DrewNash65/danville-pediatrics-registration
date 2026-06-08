@@ -209,7 +209,13 @@ export function ParentGuardianSection({ form }: ParentGuardianSectionProps) {
             <input
               type="checkbox"
               checked={hasSecondParent}
-              onChange={(e) => setHasSecondParent(e.target.checked)}
+              onChange={(e) => {
+                setHasSecondParent(e.target.checked);
+                if (!e.target.checked) {
+                  // Clear partial values when toggling off so hidden fields don't block validation
+                  setValue('parentGuardian2', undefined as any);
+                }
+              }}
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <span className="ml-2 text-sm text-gray-700">Add second parent/guardian</span>

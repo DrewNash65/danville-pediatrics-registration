@@ -173,6 +173,7 @@ export function PatientInfoSection({ form }: PatientInfoSectionProps) {
           helpText="Type MM-DD-YYYY or click calendar icon"
         >
           <DateInput
+            name="patient.dateOfBirth"
             value={form.watch('patient.dateOfBirth') || ''}
             onChange={(value) => {
               setValue('patient.dateOfBirth', value);

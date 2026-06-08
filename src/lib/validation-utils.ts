@@ -67,7 +67,7 @@ function findFieldElement(fieldName: string): HTMLElement | null {
   // Convert field name to match common HTML input name patterns
   const possibleNames = [
     fieldName,
-    fieldName.replace(/\./g, '[') + (fieldName.includes('.') ? ']' : ''),
+    fieldName.replace(/\.(\w+)/g, '[$1]'),
     fieldName.split('.').pop(), // Last part of nested field name
     ...fieldName.split('.') // All parts of nested field name
   ];

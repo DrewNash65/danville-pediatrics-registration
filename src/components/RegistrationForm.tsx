@@ -140,7 +140,10 @@ export function RegistrationForm() {
       setCurrentStep(currentStep + 1);
     } else if (!isStepValid) {
       // Find and highlight the first invalid field
-      const foundInvalidField = findAndScrollToFirstInvalidField(errors);
+      // Use form.formState.errors directly (not destructured) because the Proxy
+      // reads the latest _formState after trigger() updates it, whereas the
+      // destructured `errors` variable is a stale reference from the last render.
+      const foundInvalidField = findAndScrollToFirstInvalidField(form.formState.errors);
       if (!foundInvalidField) {
         // If we couldn't find a specific field, show a general error message
         console.warn('Could not locate invalid field, but validation failed');
@@ -166,7 +169,10 @@ export function RegistrationForm() {
       handleSubmit(onSubmit)();
     } else {
       // If form is invalid, find and highlight the first error
-      const foundInvalidField = findAndScrollToFirstInvalidField(errors);
+      // Use form.formState.errors directly (not destructured) because the Proxy
+      // reads the latest _formState after trigger() updates it, whereas the
+      // destructured `errors` variable is a stale reference from the last render.
+      const foundInvalidField = findAndScrollToFirstInvalidField(form.formState.errors);
       if (!foundInvalidField) {
         setSubmitError('Please complete all required fields before submitting.');
       }
@@ -283,8 +289,8 @@ export function RegistrationForm() {
       setSubmitError('Network error. Please check your connection and try again.');
 
       // If there are validation errors, highlight the first one
-      if (Object.keys(errors).length > 0) {
-        findAndScrollToFirstInvalidField(errors);
+      if (Object.keys(form.formState.errors).length > 0) {
+        findAndScrollToFirstInvalidField(form.formState.errors);
       }
     } finally {
       setIsSubmitting(false);

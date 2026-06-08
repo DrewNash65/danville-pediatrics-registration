@@ -56,6 +56,7 @@ export function ConsentSignatorySection({ form }: ConsentSignatorySectionProps) 
           helpText="Must be at least 18 years old to complete form"
         >
           <DateInput
+            name="consentSignatory.signatoryDateOfBirth"
             value={watch('consentSignatory.signatoryDateOfBirth') || ''}
             onChange={(value) => {
               setValue('consentSignatory.signatoryDateOfBirth', value);
